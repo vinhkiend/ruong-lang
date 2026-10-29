@@ -70,7 +70,7 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);paddin
     <h2 id="choi" style="margin-bottom:12px">Chơi ngay bản mới nhất</h2>
     <div class="play">
       <a href="https://vinhkiend.github.io/ruong-lang/" target="_blank" rel="noopener"><b>Game 2D, bản 18</b><span>Bản mới nhất, hình điểm ảnh, có truyện "Ngọc trong bùn"</span><span class="go">Mở link →</span></a>
-      <a href="https://vinhkiend.github.io/ruong-lang/ban/3d/" target="_blank" rel="noopener"><b>Bản thử 3D xóm Bãi</b><span>Phiên bản 4, có hoạt ảnh làm ruộng, câu cá</span><span class="go">Mở link →</span></a>
+      <a href="https://vinhkiend.github.io/ruong-lang/ban/3d/" target="_blank" rel="noopener"><b>Bản thử 3D xóm Bãi</b><span>Phiên bản 8: cây cối, lúa, trâu, cò, én mới</span><span class="go">Mở link →</span></a>
     </div>
   </section>
 
@@ -79,14 +79,14 @@ footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);paddin
   <section>
     <div class="tabs" role="tablist">
       <button role="tab" id="t2d" aria-selected="true" aria-controls="p2d">Game 2D <small>18 bản</small></button>
-      <button role="tab" id="t3d" aria-selected="false" aria-controls="p3d">Bản thử 3D <small>4 bản</small></button>
+      <button role="tab" id="t3d" aria-selected="false" aria-controls="p3d">Bản thử 3D <small>8 bản</small></button>
     </div>
     <div class="ctrl"><button id="order" type="button">Xem bản mới nhất trước</button></div>
     <ol class="tl" id="p2d" role="tabpanel" aria-labelledby="t2d"></ol>
     <ol class="tl" id="p3d" role="tabpanel" aria-labelledby="t3d" hidden></ol>
   </section>
 
-  <footer>Cập nhật 29/10/2026. Khi có bản mới, trang này sẽ được bổ sung thêm một dòng.</footer>
+  <footer>Cập nhật 29/10/2026, 13:40. Khi có bản mới, trang này sẽ được bổ sung thêm một dòng.</footer>
 </div>
 
 <script>
@@ -115,19 +115,23 @@ const D3=[
  [1,"29/10 11:30","Sa bàn xóm Bãi",["mốc lớn"],["Sông, bến, thuyền nan, ao sen vịt, nhà tranh 3 gian","12 thửa ruộng nước: cuốc, gieo, lớn, gặt","Ngày đêm, đèn dầu, đom đóm"]],
  [2,"29/10 11:40","Đẹp hơn",[],["Tán cây bo tròn, mái tranh 3 lớp, nước lấp lánh","Nút hình Cao/Thấp cho máy yếu"]],
  [3,"29/10 11:50","Chơi trên điện thoại",[],["Sửa lỗi kẹt nhân vật lúc vào game","Cần điều khiển ảo, nhìn xa hơn khi cầm dọc"]],
- [4,"29/10 12:10","Hoạt ảnh làm ruộng",["mới nhất"],["Cuốc, gieo, tưới, gặt, múc giếng, rải thóc cho gà","Câu cá ao và sông, nhặt trứng, bướm, bóng mây"]],
+ [4,"29/10 12:10","Hoạt ảnh làm ruộng",[],["Cuốc, gieo, tưới, gặt, múc giếng, rải thóc cho gà","Câu cá ao và sông, nhặt trứng, bướm, bóng mây"]],
+ [5,"29/10 12:25","Sông chảy, áo hiệp khách",[],["Sông có vân nước trôi, bọt bờ, lau sậy, bèo trôi","Nút đổi áo Nông dân / Hiệp khách"]],
+ [6,"29/10 12:40","Camera trước, người có khung xương",[],["Nhìn chéo từ phía trước, cây che người tự mờ","Thân người KayKit có động tác thật"]],
+ [7,"29/10 12:52","Dáng người thật",[],["Thân người Quaternius, áo quần may theo dáng","Nút đổi dáng Người thật / Hoạt hình"]],
+ [8,"29/10 13:20","Cây cối, lúa, vật nuôi mới",["mới nhất"],["Vẽ lại cây cối, khóm lúa có bông, cỏ","Gà vịt, trâu có cò đậu lưng, lợn ỉ trong chuồng, chó vàng","Cò lội ruộng, đàn cò bay chữ V, bầy én"]],
 ];
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function row(d,is3d){
   const [n,t,title,tags,items,link,gh]=d;
   const chips=tags.map(x=>`<span class="chip${x==="link mới"||x==="có bản công khai"?" dat":""}">${esc(x)}</span>`).join("");
   let links="";
-  if(is3d) links=n===4?`<a href="${GHB}3d/" target="_blank" rel="noopener">Chơi bản này</a>`:`<span class="src">Bản này đã được sửa thẳng thành bản 4 nên không còn riêng để chơi lại</span>`;
+  if(is3d){const P3={4:"3d-v4/",7:"3d-v7/",8:"3d/"}[n]; links=P3?`<a href="${GHB}${P3}" target="_blank" rel="noopener">Chơi bản này</a>`+(n===8?"":""):`<span class="src">Bản này đã được sửa thẳng thành bản sau nên không còn riêng để chơi lại</span>`;}
   else{
     links=`<a href="${GHB}v${n}/" target="_blank" rel="noopener">Chơi bản này</a>`;
     if((link===A7&&n===7)||(link===A18&&n===18)) links+=``;
   }
-  const src=is3d?(n===4?"ban-thu-3d/xom-bai-3d.html":""):`ruong-lang-v${n}.html`;
+  const src=is3d?({7:"ban-thu-3d/xom-bai-3d-v7.html",8:"ban-thu-3d/xom-bai-3d.html"}[n]||""):`ruong-lang-v${n}.html`;
   return `<li><div class="num"><small>BẢN</small>${n}</div><div class="body"><div class="top"><h3>${esc(title)}</h3><span class="time">${t}</span>${chips}</div><ul>${items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul><div class="links">${links}</div>${src?`<div class="src">Mã nguồn: game-nong-trai/${src}</div>`:""}</div></li>`;
 }
 let newest=false;
