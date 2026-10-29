@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ruộng Làng Đại Việt</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+<style>
+/* Bố cục: thanh trạng thái dính trên cùng, cánh đồng ô vuông như bờ ruộng, thanh tab dưới đáy trên điện thoại.
+   Sáng: giấy mạ xanh nhạt, son đỏ, vàng hoè, chàm. Tối: nền sơn mài. */
+:root{
+  --bg:#E4E9D3; --bg2:#D5DCBC; --card:#F4F6EA; --ink:#21261A; --muted:#5B644C; --line:rgba(33,38,26,.16);
+  --son:#B23A28; --onson:#FFFFFF; --hoe:#B88208; --cham:#2C4A6E; --la:#4A7A2C;
+  --bo:#86A660; --soil:#8B6A45; --soilw:#5B4330; --ripe:#E3B53C; --good:#3F7A2A; --bad:#B23A28;
+  --fd:"Baloo 2","Be Vietnam Pro",system-ui,sans-serif; --fb:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#13180F; --bg2:#1B2216; --card:#1E2619; --ink:#E7EBD8; --muted:#A2AC8C; --line:rgba(231,235,216,.14);
+  --son:#E0694F; --onson:#1A0E09; --hoe:#E4B446; --cham:#88AAD8; --la:#8FC167;
+  --bo:#3E5A2A; --soil:#64492F; --soilw:#3F2D1E; --ripe:#C99A2B; --good:#8FC167; --bad:#E0694F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13180F; --bg2:#1B2216; --card:#1E2619; --ink:#E7EBD8; --muted:#A2AC8C; --line:rgba(231,235,216,.14);
+  --son:#E0694F; --onson:#1A0E09; --hoe:#E4B446; --cham:#88AAD8; --la:#8FC167;
+  --bo:#3E5A2A; --soil:#64492F; --soilw:#3F2D1E; --ripe:#C99A2B; --good:#8FC167; --bad:#E0694F; color-scheme:dark}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg2)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--cham);outline-offset:2px}
+h1,h2,h3{font-family:var(--fd);line-height:1.15;text-wrap:balance;margin:0}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Thanh trên */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg2);border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px;margin:0 auto;padding-block:10px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.brand{display:flex;flex-direction:column;margin-right:auto;min-width:0}
+.brand b{font-family:var(--fd);font-size:1.45rem;font-weight:800;color:var(--son);line-height:1}
+.brand span{font-size:.75rem;color:var(--muted);letter-spacing:.04em}
+.stat{display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.season{font-family:var(--fd);font-weight:700;padding:1px 10px;border-radius:99px;color:var(--onson);background:var(--la)}
+.season.s1{background:var(--hoe)}.season.s2{background:var(--son)}.season.s3{background:var(--cham)}
+.coin{width:18px;height:18px;border-radius:50%;background:var(--hoe);position:relative;flex:none;box-shadow:inset 0 0 0 2px rgba(0,0,0,.18)}
+.coin::after{content:"";position:absolute;inset:6px;background:var(--bg2);border-radius:1px}
+.money b{font-family:var(--fd);font-size:1.15rem}
+.bar{width:74px;height:8px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--la);border-radius:9px;transition:width .25s}
+.bar.low i{background:var(--son)}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:4px 10px;font-size:.85rem}
+.sleep{background:var(--cham);color:var(--bg);border:0;border-radius:12px;padding:8px 16px;font-family:var(--fd);font-weight:700;font-size:1rem}
+
+.banner{max-width:1120px;margin:10px auto 0;}
+.banner > div{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;border-radius:12px;background:var(--card);border-left:5px solid var(--cham)}
+.banner .bad{border-left-color:var(--bad)}.banner .good{border-left-color:var(--good)}
+.banner small{color:var(--muted)}
+
+/* Tabs */
+.tabs{max-width:1120px;margin:12px auto 0;display:flex;gap:6px}
+.tabs button{border:1px solid var(--line);background:transparent;border-radius:10px 10px 0 0;padding:8px 16px;font-weight:600;color:var(--muted);position:relative}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--ink);border-bottom-color:var(--card)}
+.tabs .dot{position:absolute;top:4px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--son)}
+
+.wrap{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;padding-block:0 32px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:0 14px 14px 14px;padding:16px;min-width:0}
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.box h3,.panel h2{font-size:1.15rem;margin-bottom:8px}
+.panel h2{font-size:1.3rem}
+.sub{color:var(--muted);font-size:.88rem;margin:0 0 12px}
+.mobile-only{display:none}
+
+/* Ruộng */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.btn{border:1.5px solid var(--ink);background:var(--card);border-radius:10px;padding:6px 12px;font-weight:600;font-size:.9rem;white-space:nowrap}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.p{background:var(--son);border-color:var(--son);color:var(--onson)}
+.btn.s{padding:3px 9px;font-size:.82rem}
+.field{background:var(--bo);padding:10px;border-radius:14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.plot{aspect-ratio:1;max-width:100%;border:0;border-radius:8px;background:var(--soil);color:#F7EEDC;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;overflow:hidden;
+  background-image:repeating-linear-gradient(0deg,transparent 0 10px,rgba(0,0,0,.08) 10px 12px);transition:transform .12s}
+.plot:active{transform:scale(.96)}
+.plot.wet{background-color:var(--soilw);box-shadow:inset 0 0 0 2px rgba(136,170,216,.55)}
+.plot.ripe{box-shadow:inset 0 0 0 3px var(--ripe),0 0 0 2px var(--ripe);animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:inset 0 0 0 3px var(--ripe),0 0 10px 3px var(--ripe)}}
+.plot .ic{font-size:clamp(1.6rem,6vw,2.4rem);line-height:1}
+.plot .ic.sm{font-size:clamp(1.2rem,4.5vw,1.7rem)}
+.plot .nm{font-size:.74rem;font-weight:600;line-height:1.2;text-align:center}
+.plot .tag{position:absolute;top:5px;left:5px;font-size:.64rem;font-weight:700;padding:0 6px;border-radius:6px;background:rgba(0,0,0,.35)}
+.plot .tag.dry{background:var(--son);color:var(--onson)}
+.plot .pg{position:absolute;left:8px;right:8px;bottom:7px;height:5px;border-radius:5px;background:rgba(0,0,0,.3);overflow:hidden}
+.plot .pg i{display:block;height:100%;background:var(--ripe)}
+.plot.empty{color:rgba(247,238,220,.75)}
+.plot.add{background:transparent;border:2px dashed rgba(33,38,26,.35);color:var(--ink);background-image:none}
+.plot.add .nm{font-size:.72rem}
+.guide{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{font-size:.8rem;padding:2px 10px;border-radius:99px;border:1px solid var(--line);background:var(--bg)}
+.chip.off{opacity:.45;text-decoration:line-through}
+
+/* Danh sách / bảng */
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:2rem minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .e{font-size:1.5rem;text-align:center}
+.row .t b{display:block}
+.row .t small{color:var(--muted);display:block;line-height:1.35}
+.row .a{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.num{font-variant-numeric:tabular-nums}
+.up{color:var(--good)}.down{color:var(--bad)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.sec{margin-top:18px}
+.sec h3{font-size:1.05rem;margin-bottom:4px}
+.note{font-size:.85rem;color:var(--muted)}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:0 8px;border-radius:99px;background:var(--bg2);color:var(--ink);margin-left:6px;vertical-align:1px}
+.pill.bad{background:var(--son);color:var(--onson)}.pill.good{background:var(--la);color:var(--onson)}
+.goal{display:flex;gap:8px;align-items:flex-start;padding:4px 0;font-size:.9rem}
+.goal i{flex:none;width:16px;height:16px;border-radius:4px;border:2px solid var(--muted);margin-top:3px}
+.goal.done{color:var(--muted)}.goal.done i{background:var(--la);border-color:var(--la)}
+.goal small{color:var(--muted)}
+.log{list-style:none;margin:0;padding:0;font-size:.84rem;max-height:340px;overflow:auto}
+.log li{padding:4px 0;border-bottom:1px dashed var(--line);display:flex;gap:8px}
+.log li span{color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
+.log .bad{color:var(--bad)}
+
+/* Hộp thoại */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(10,12,8,.5);display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom,0px))}
+@media (min-width:640px){.modal{align-items:center}}
+.sheet{background:var(--card);color:var(--ink);border-radius:18px;padding:20px;width:min(520px,100%);max-height:86vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.sheet h2{font-size:1.45rem;margin-bottom:6px;color:var(--son)}
+.sheet ol,.sheet ul{padding-left:1.2rem;margin:8px 0}
+.sheet li{margin:4px 0}
+.sheet .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.notes{list-style:none;padding:0}
+.notes li{display:flex;gap:10px;align-items:flex-start;padding:6px 0}
+.notes li::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;margin-top:7px;background:var(--cham)}
+.notes li.bad::before{background:var(--bad)}.notes li.good::before{background:var(--good)}.notes li.tax::before{background:var(--hoe)}
+.seedpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.seedpick button{border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:10px;text-align:left;display:flex;gap:10px;align-items:center}
+.seedpick button:disabled{opacity:.45}
+.seedpick .e{font-size:1.7rem}
+.seedpick small{display:block;color:var(--muted);line-height:1.3}
+
+.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;flex-direction:column;gap:6px;align-items:center;pointer-events:none;width:min(420px,calc(100% - 32px))}
+.toast{background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:10px;font-size:.9rem;font-weight:500;animation:tin .2s ease-out;text-align:center}
+.toast.warn{background:var(--son);color:var(--onson)}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+
+@media (max-width:860px){
+  .wrap{grid-template-columns:minmax(0,1fr);padding-block:0 calc(90px + env(safe-area-inset-bottom,0px))}
+  .side{display:none}
+  .mobile-only{display:block}
+  .tabs{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:25;background:var(--bg2);border-top:1px solid var(--line);
+    padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));gap:4px}
+  .tabs button{flex:1;border-radius:10px;padding:8px 2px;font-size:.82rem;border-color:transparent}
+  .tabs button[aria-selected="true"]{background:var(--card);border-color:var(--line)}
+  .panel{border-radius:14px;margin-top:12px}
+  .toasts{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:520px){
+  .field{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .seedpick{grid-template-columns:minmax(0,1fr)}
+  .brand b{font-size:1.25rem}
+  .top-in{gap:6px 12px}
+  .sleep{padding:7px 12px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="top"><div class="top-in gut" id="hdr"></div></header>
+<div class="gut"><div class="banner" id="banner"></div></div>
+<div class="gut"><nav class="tabs" id="tabs" role="tablist" aria-label="Khu vực"></nav></div>
+<main class="wrap gut">
+  <section class="panel" id="panel" role="tabpanel"></section>
+  <aside class="side" id="side"></aside>
+</main>
+<div class="modal" id="modal" hidden><div class="sheet" role="dialog" aria-modal="true" id="sheet"></div></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+/* ===== Dữ liệu game ===== */
+const SL = 10, MAXS = 20, KEY = "ruonglang-ban1";
+const SEASONS = ["Xuân","Hạ","Thu","Đông"];
+const SEASON_TIP = [
+  "Trồng được lúa, rau muống, lạc, cỏ.",
+  "Mùa nước lên: coi chừng lũ và châu chấu. Trồng được mía.",
+  "Vụ mùa cuối năm. Nên trữ rơm cỏ cho mùa Đông.",
+  "Trời rét: chỉ trồng được khoai lang, cỏ không mọc. Gia súc ăn rơm đã trữ."
+];
+const GOODS = {
+  thoc:{n:"Thóc", i:"🌾", base:11},
+  rau:{n:"Rau muống", i:"🥬", base:6},
+  lac:{n:"Lạc", i:"🥜", base:8},
+  mia:{n:"Mía", i:"🎋", base:14},
+  khoai:{n:"Khoai lang", i:"🍠", base:6},
+  trung:{n:"Trứng gà", i:"🥚", base:5},
+  rom:{n:"Rơm cỏ", i:"🌿", base:2}
+};
+const CROPS = {
+  lua:{n:"Lúa", i:"🌾", seed:8, days:5, out:{thoc:2, rom:1}, ss:[0,1,2], note:"Có trâu ăn no: thêm 1 thóc"},
+  rau:{n:"Rau muống", i:"🥬", seed:2, days:2, out:{rau:1}, ss:[0,1,2], note:"Lớn nhanh, lãi ít"},
+  lac:{n:"Lạc", i:"🥜", seed:5, days:4, out:{lac:2}, ss:[0,1], note:""},
+  mia:{n:"Mía", i:"🎋", seed:12, days:7, out:{mia:3}, ss:[1,2], note:"Lâu nhưng lãi cao"},
+  khoai:{n:"Khoai lang", i:"🍠", seed:3, days:4, out:{khoai:2}, ss:[2,3], note:"Trồng được cả mùa Đông"},
+  co:{n:"Cỏ", i:"🌿", seed:1, days:3, out:{rom:3}, ss:[0,1,2], note:"Làm thức ăn cho gia súc"}
+};
+const ANIMALS = {
+  ga:{n:"Gà", i:"🐓", price:30, eat:1, sell:15, desc:"Ăn 1 rơm cỏ mỗi ngày, đẻ 1 trứng."},
+  lon:{n:"Lợn", i:"🐖", price:60, eat:2, sell:30, fat:8, fatSell:170, desc:"Ăn 2 rơm cỏ mỗi ngày. Ăn đủ 8 ngày thì béo, bán 170 đồng."},
+  trau:{n:"Trâu", i:"🐃", price:180, eat:3, sell:120, desc:"Ăn 3 rơm cỏ mỗi ngày. Kéo cày: mỗi lần gặt lúa thêm 1 thóc."}
+};
+const UPG = [
+  {id:"cho", n:"Chó giữ nhà", price:50, desc:"Đêm có cáo thì chó sủa đuổi đi, không mất gà."},
+  {id:"chuong", n:"Chuồng rộng", price:120, desc:"Nuôi được 10 con thay vì 4 con."},
+  {id:"de", n:"Đắp đê", price:180, desc:"Cùng làng đắp đê, giữ ruộng khi nước sông lên vào mùa Hạ và Thu."},
+  {id:"guong", n:"Guồng nước", price:220, desc:"Mỗi sáng guồng tự tưới tất cả ruộng, không tốn sức."},
+  {id:"nha", n:"Nhà ngói ba gian", price:1500, desc:"Mục tiêu lớn nhất của bản chơi thử."}
+];
+const GOALS = [
+  {id:"lua1", t:"Gặt vụ lúa đầu tiên", r:20},
+  {id:"thue", t:"Nộp đủ thuế một mùa", r:20},
+  {id:"trau", t:"Mua một con trâu kéo cày", r:30},
+  {id:"r10", t:"Có 10 thửa ruộng", r:50},
+  {id:"dong", t:"Qua hết mùa Đông năm thứ nhất", r:80},
+  {id:"nha", t:"Dựng nhà ngói ba gian", r:0}
+];
+/* Tài nguyên ngoài (nhạc, hình). Để trống cho đến khi kiểm tra được giấy phép. */
+const CREDITS = [];
+
+/* ===== Trạng thái ===== */
+let S, tab = "ruong";
+function fresh(){
+  const pf = {}; for (const g in GOODS) pf[g] = 1;
+  return {v:1, day:1, money:60, suc:MAXS,
+    plots:Array.from({length:6}, () => ({c:null, a:0, w:false})),
+    seeds:{lua:3, rau:4}, goods:{rom:8},
+    animals:[{t:"ga",h:0,f:0},{t:"ga",h:0,f:0}],
+    up:{}, pf, pp:{...pf}, ev:null, wet:false, log:[], goals:{}, seenHelp:false, won:false};
+}
+function load(){ try { const r = localStorage.getItem(KEY); if (r){ const o = JSON.parse(r); if (o && o.v === 1) return o; } } catch(e){} return null; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+
+const seasonOf = d => Math.floor((d-1)/SL) % 4;
+const yearOf = d => Math.floor((d-1)/(SL*4)) + 1;
+const dis = d => (d-1) % SL + 1;
+const isPhien = d => dis(d) === 5 || dis(d) === 10;
+const taxDue = () => S.plots.length*6 + 10;
+const cap = () => S.up.chuong ? 10 : 4;
+const fedTrau = () => S.animals.some(a => a.t === "trau" && a.h === 0);
+const romBuy = () => seasonOf(S.day) === 3 ? 5 : 2;
+const plotPrice = () => 40 + 15*(S.plots.length - 6);
+const romNeed = () => S.animals.reduce((s,a) => s + ANIMALS[a.t].eat, 0);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function sellPrice(g){
+  if (g === "rom") return Math.max(1, Math.floor(romBuy()/2));
+  let p = GOODS[g].base * S.pf[g];
+  if (isPhien(S.day)) p *= 1.25;
+  if (S.ev && S.ev.id === "hoi") p *= 1.2;
+  if (S.ev && S.ev.id === "han" && (g === "thoc" || g === "rau")) p *= 1.3;
+  return Math.max(1, Math.round(p));
+}
+function trend(g){ const d = S.pf[g] - (S.pp[g] ?? S.pf[g]); return d > 0.03 ? "up" : d < -0.03 ? "down" : "flat"; }
+
+/* ===== Hành động ===== */
+function toast(t, kind){
+  const el = document.createElement("div"); el.className = "toast" + (kind ? " "+kind : ""); el.textContent = t;
+  const box = document.getElementById("toasts"); box.appendChild(el);
+  while (box.children.length > 3) box.firstChild.remove();
+  setTimeout(() => el.remove(), 2600);
+}
+function addLog(t, k){ S.log.unshift({d:S.day, t, k:k||""}); if (S.log.length > 40) S.log.length = 40; }
+function commit(){ checkGoals(); save(); render(); }
+function useSuc(n){
+  if (S.suc < n){ toast("Hết sức rồi. Bấm “Đi ngủ” để sang ngày mới.", "warn"); return false; }
+  S.suc -= n; return true;
+}
+function mark(id){
+  if (S.goals[id]) return;
+  S.goals[id] = true;
+  const g = GOALS.find(x => x.id === id);
+  if (g.r) S.money += g.r;
+  addLog("Hoàn thành mục tiêu: " + g.t + (g.r ? " (thưởng " + g.r + " đồng)" : ""), "good");
+  toast("Mục tiêu xong: " + g.t + (g.r ? " · +" + g.r + " đồng" : ""));
+}
+function checkGoals(){
+  if (S.animals.some(a => a.t === "trau")) mark("trau");
+  if (S.plots.length >= 10) mark("r10");
+}
+const fmtGot = got => Object.entries(got).map(([g,n]) => "+" + n + " " + GOODS[g].n).join(", ");
+
+function tapPlot(i){
+  const p = S.plots[i];
+  if (!p.c){ openSeeds(i); return; }
+  const C = CROPS[p.c];
+  if (p.a >= C.days){ harvest(i); return; }
+  if (!p.w){ if (!useSuc(1)) return; p.w = true; toast("Đã tưới " + C.n + "."); commit(); return; }
+  toast(C.n + " đã tưới hôm nay. Còn " + (C.days - p.a) + " đêm nữa thì chín.");
+}
+function harvest(i, quiet){
+  const p = S.plots[i], C = CROPS[p.c];
+  if (!useSuc(1)) return null;
+  const got = {...C.out};
+  if (p.c === "lua" && fedTrau()) got.thoc += 1;
+  for (const g in got) S.goods[g] = (S.goods[g]||0) + got[g];
+  if (p.c === "lua") mark("lua1");
+  p.c = null; p.a = 0; p.w = false;
+  if (!quiet){ toast("Gặt xong: " + fmtGot(got)); commit(); }
+  return got;
+}
+function plant(i, c){
+  const p = S.plots[i], C = CROPS[c];
+  if (p.c || !(S.seeds[c] > 0) || !C.ss.includes(seasonOf(S.day))) return;
+  if (!useSuc(1)) return;
+  S.seeds[c]--; p.c = c; p.a = 0; p.w = !!S.wet;
+  closeModal();
+  toast("Đã gieo " + C.n + (p.w ? " (đã có nước)." : ". Nhớ tưới nhé."));
+  commit();
+}
+function waterAll(){
+  let n = 0;
+  for (const p of S.plots){ if (p.c && !p.w && p.a < CROPS[p.c].days){ if (S.suc < 1){ break; } S.suc--; p.w = true; n++; } }
+  if (n) toast("Đã tưới " + n + " thửa."); else if (S.suc < 1) toast("Hết sức rồi.", "warn"); else toast("Không còn thửa nào cần tưới.");
+  commit();
+}
+function harvestAll(){
+  const tot = {}; let n = 0;
+  S.plots.forEach((p,i) => {
+    if (p.c && p.a >= CROPS[p.c].days && S.suc >= 1){ const g = harvest(i, true); n++; for (const k in g) tot[k] = (tot[k]||0) + g[k]; }
+  });
+  if (n) toast("Gặt " + n + " thửa: " + fmtGot(tot)); else toast("Chưa có thửa nào chín.");
+  commit();
+}
+function buySeed(c, n){
+  const cost = CROPS[c].seed * n;
+  if (S.money < cost){ toast("Không đủ tiền. Cần " + cost + " đồng.", "warn"); return; }
+  S.money -= cost; S.seeds[c] = (S.seeds[c]||0) + n;
+  toast("Mua " + n + " giống " + CROPS[c].n + " (−" + cost + " đồng)."); commit();
+}
+function sellGood(g, all){
+  const have = S.goods[g]||0; if (!have) return;
+  const n = all ? have : 1, pr = sellPrice(g) * n;
+  S.goods[g] = have - n; S.money += pr;
+  toast("Bán " + n + " " + GOODS[g].n + " được " + pr + " đồng."); commit();
+}
+function buyRom(n){
+  const cost = romBuy()*n;
+  if (S.money < cost){ toast("Không đủ tiền. Cần " + cost + " đồng.", "warn"); return; }
+  S.money -= cost; S.goods.rom = (S.goods.rom||0) + n;
+  toast("Mua " + n + " rơm cỏ (−" + cost + " đồng)."); commit();
+}
+function buyAnimal(t){
+  const A = ANIMALS[t];
+  if (S.animals.length >= cap()){ toast("Chuồng đã đầy. Nâng cấp Chuồng rộng để nuôi thêm.", "warn"); return; }
+  if (S.money < A.price){ toast("Không đủ tiền. Cần " + A.price + " đồng.", "warn"); return; }
+  S.money -= A.price; S.animals.push({t, h:0, f:0});
+  toast("Đã mua 1 " + A.n + "."); commit();
+}
+function animalValue(a){ const A = ANIMALS[a.t]; return (a.t === "lon" && a.f >= A.fat) ? A.fatSell : A.sell; }
+function sellAnimal(i){
+  const a = S.animals[i]; if (!a) return;
+  const v = animalValue(a); S.money += v; S.animals.splice(i,1);
+  toast("Bán " + ANIMALS[a.t].n + " được " + v + " đồng."); commit();
+}
+function buyUpg(id){
+  const u = UPG.find(x => x.id === id);
+  if (S.up[id]) return;
+  if (S.money < u.price){ toast("Không đủ tiền. Cần " + u.price + " đồng.", "warn"); return; }
+  S.money -= u.price; S.up[id] = true;
+  addLog("Đã có " + u.n + ".", "good");
+  if (id === "guong"){ S.plots.forEach(p => { if (p.c) p.w = true; }); S.wet = true; }
+  if (id === "nha"){ mark("nha"); S.won = true; commit(); showWin(); return; }
+  toast("Đã có " + u.n + "."); commit();
+}
+function buyPlot(){
+  if (S.plots.length >= 16) return;
+  const pr = plotPrice();
+  if (S.money < pr){ toast("Không đủ tiền. Cần " + pr + " đồng.", "warn"); return; }
+  S.money -= pr; S.plots.push({c:null, a:0, w:!!S.wet});
+  toast("Khai hoang thêm 1 thửa ruộng."); commit();
+}
+
+/* ===== Qua đêm ===== */
+function sleep(){
+  const notes = [], d = S.day, se = seasonOf(d);
+  let died = 0;
+  for (const p of S.plots){
+    if (!p.c) continue;
+    const C = CROPS[p.c];
+    if (p.a < C.days){
+      if (p.w) p.a++;
+      else if (S.ev && S.ev.id === "han"){ p.c = null; p.a = 0; died++; }
+    }
+    p.w = false;
+  }
+  if (died) notes.push(["bad", "Nắng hạn làm héo " + died + " thửa chưa được tưới."]);
+
+  let eggs = 0, hungry = 0; const lost = [];
+  for (const a of S.animals){
+    const A = ANIMALS[a.t];
+    if ((S.goods.rom||0) >= A.eat){ S.goods.rom -= A.eat; a.h = 0; a.f = (a.f||0) + 1; if (a.t === "ga") eggs++; if (a.t === "lon" && a.f === A.fat) notes.push(["good","Một con lợn đã béo. Vào Chuồng để bán được 170 đồng."]); }
+    else { a.h++; hungry++; }
+  }
+  S.animals = S.animals.filter(a => { if (a.h >= 3){ lost.push(ANIMALS[a.t].n); return false; } return true; });
+  if (eggs){ S.goods.trung = (S.goods.trung||0) + eggs; notes.push(["good","Gà đẻ " + eggs + " quả trứng."]); }
+  if (hungry) notes.push(["bad", hungry + " con vật bị đói vì hết rơm cỏ. Đói 3 ngày liền sẽ chết."]);
+  if (lost.length) notes.push(["bad","Chết vì đói: " + lost.join(", ") + "."]);
+
+  if (dis(d) === SL){
+    const t = taxDue();
+    if (S.money >= t){ S.money -= t; notes.push(["tax","Lý trưởng thu thuế mùa " + SEASONS[se] + ": " + t + " đồng."]); mark("thue"); }
+    else {
+      const paid = S.money; S.money = 0;
+      let m = "Thiếu thuế: chỉ nộp được " + paid + "/" + t + " đồng.";
+      if (S.plots.length > 4){ S.plots.pop(); m += " Quan thu lại 1 thửa ruộng."; }
+      notes.push(["bad", m]);
+    }
+  }
+
+  S.day++; S.suc = MAXS;
+  S.pp = {...S.pf};
+  for (const g in S.pf){ let f = S.pf[g] + (Math.random()-0.5)*0.24 + (1 - S.pf[g])*0.15; S.pf[g] = Math.min(1.5, Math.max(0.6, f)); }
+  S.ev = null; S.wet = false;
+  rollEvent(notes);
+  if (S.up.guong){ S.plots.forEach(p => { if (p.c) p.w = true; }); S.wet = true; }
+  if (S.day === SL*4 + 1) mark("dong");
+  const nd = dis(S.day);
+  if (nd === 1) notes.unshift(["season","Sang mùa " + SEASONS[seasonOf(S.day)] + ". " + SEASON_TIP[seasonOf(S.day)]]);
+  if (nd === SL-2) notes.push(["tax","Còn 3 ngày nữa nộp thuế: " + taxDue() + " đồng."]);
+  if (isPhien(S.day)) notes.push(["good","Hôm nay có chợ phiên, giá bán cao hơn ngày thường."]);
+  const need = romNeed(), have = S.goods.rom||0;
+  if (need && have < need*3) notes.push(["bad","Rơm cỏ chỉ còn " + have + ", đủ cho khoảng " + Math.floor(have/need) + " ngày."]);
+  notes.forEach(n => addLog(n[1], n[0]));
+  commit();
+  showMorning(notes);
+}
+function pickW(opts){ const tot = opts.reduce((s,o) => s + o[1], 0); let r = Math.random()*tot; for (const o of opts){ if ((r -= o[1]) < 0) return o[0]; } return opts[0][0]; }
+function rollEvent(notes){
+  const se = seasonOf(S.day);
+  if (S.day < 4 || Math.random() > 0.38) return;
+  const opts = [["mua", se === 3 ? 1 : 3], ["hoi", 1]];
+  if (se !== 3) opts.push(["han", se === 1 ? 2 : 1]);
+  if (se === 1 || se === 2){ opts.push(["chau", 1.5]); if (S.day > SL) opts.push(["lu", 1.2]); }
+  if (S.animals.some(a => a.t === "ga")) opts.push(["cao", 1]);
+  const id = pickW(opts); let msg, k = "bad";
+  if (id === "mua"){ S.plots.forEach(p => { if (p.c) p.w = true; }); S.wet = true; msg = "Mưa rào: cả cánh đồng được tưới hôm nay, gieo mới cũng có nước."; k = "good"; }
+  else if (id === "hoi"){ msg = "Làng mở hội: mọi hàng bán ở chợ hôm nay được thêm 20%."; k = "good"; }
+  else if (id === "han"){ msg = "Nắng hạn: thửa nào chưa tưới đến tối sẽ héo chết. Giá thóc và rau tăng."; }
+  else if (id === "chau"){
+    const c = S.plots.filter(p => p.c && p.a < CROPS[p.c].days);
+    const k2 = Math.min(2, c.length);
+    for (let j = 0; j < k2; j++){ const p = c.splice(Math.floor(Math.random()*c.length),1)[0]; p.c = null; p.a = 0; p.w = false; }
+    msg = k2 ? "Châu chấu kéo đến, ăn trụi " + k2 + " thửa đang lớn." : "Châu chấu bay qua nhưng không có gì để ăn.";
+  }
+  else if (id === "lu"){
+    if (S.up.de){ msg = "Nước sông lên cao nhưng đê vững, ruộng an toàn."; k = "good"; }
+    else {
+      const c = S.plots.filter(p => p.c), k2 = Math.min(3, c.length);
+      for (let j = 0; j < k2; j++){ const p = c.splice(Math.floor(Math.random()*c.length),1)[0]; p.c = null; p.a = 0; p.w = false; }
+      msg = "Nước sông tràn bờ, ngập " + k2 + " thửa ruộng. Đắp đê (mục Nâng cấp) để phòng lần sau.";
+    }
+  }
+  else if (id === "cao"){
+    if (S.up.cho){ msg = "Đêm qua có cáo lảng vảng, chó sủa đuổi đi."; k = "good"; }
+    else { const i = S.animals.findIndex(a => a.t === "ga"); S.animals.splice(i,1); msg = "Cáo vào chuồng bắt mất 1 con gà. Nuôi chó giữ nhà để phòng."; }
+  }
+  S.ev = {id, msg, k};
+  notes.push([k, msg]);
+}
+
+/* ===== Hộp thoại ===== */
+const modal = document.getElementById("modal"), sheet = document.getElementById("sheet");
+let modalLock = false;
+function openModal(html, lock){ sheet.innerHTML = html; modal.hidden = false; modalLock = !!lock; const b = sheet.querySelector("button"); if (b) b.focus(); }
+function closeModal(){ modal.hidden = true; sheet.innerHTML = ""; }
+function showHelp(){
+  openModal(`<h2>Cách chơi</h2>
+  <p class="note">Anh là một nông hộ ở làng quê Đại Việt thời Lý–Trần. Mỗi ngày có 20 sức; gieo, tưới, gặt mỗi việc tốn 1 sức.</p>
+  <ol>
+   <li><b>Gieo:</b> chạm vào ô đất trống, chọn giống. Đầu game có sẵn ít giống lúa và rau muống.</li>
+   <li><b>Tưới:</b> ô có nhãn “Khô” là chưa tưới. Cây chỉ lớn qua đêm nếu hôm đó đã được tưới.</li>
+   <li><b>Gặt:</b> ô viền vàng là đã chín, chạm để gặt. Hàng vào Kho.</li>
+   <li><b>Bán và mua:</b> vào Chợ bán hàng, mua thêm giống. Ngày 5 và 10 mỗi mùa có chợ phiên, giá cao hơn.</li>
+   <li><b>Đi ngủ:</b> bấm nút “Đi ngủ” để sang ngày mới. Gia súc tự ăn rơm cỏ trong kho.</li>
+   <li><b>Thuế:</b> cuối mỗi mùa (ngày 10) lý trưởng thu thuế theo số thửa ruộng. Thiếu tiền sẽ bị thu lại ruộng.</li>
+   <li><b>Mùa Đông:</b> cỏ không mọc. Hãy trữ rơm cỏ từ mùa Thu để gia súc không bị đói.</li>
+  </ol>
+  <p><b>Mục tiêu:</b> dành dụm 1.500 đồng dựng nhà ngói ba gian.</p>
+  <div class="acts"><button class="btn p" data-act="closehelp">Ra đồng</button></div>`);
+}
+function showMorning(notes){
+  const se = seasonOf(S.day);
+  openModal(`<h2>Sáng ngày ${dis(S.day)} · mùa ${SEASONS[se]}</h2>
+   <p class="note">Năm thứ ${yearOf(S.day)}</p>
+   ${notes.length ? `<ul class="notes">${notes.map(n => `<li class="${n[0]}">${esc(n[1])}</li>`).join("")}</ul>` : `<p>Một đêm yên bình. Trời quang, gà gáy sáng.</p>`}
+   <div class="acts"><button class="btn p" data-act="close">Bắt đầu ngày mới</button></div>`);
+}
+function openSeeds(i){
+  const se = seasonOf(S.day);
+  const items = Object.entries(CROPS).map(([c,C]) => {
+    const have = S.seeds[c]||0, ok = C.ss.includes(se);
+    const why = !ok ? "Không hợp mùa " + SEASONS[se] : have ? "Còn " + have + " giống · " + C.days + " đêm" : "Hết giống, ra Chợ mua";
+    return `<button data-act="plant" data-i="${i}" data-c="${c}" ${(!ok || !have) ? "disabled" : ""}><span class="e">${C.i}</span><span><b>${C.n}</b><small>${why}</small></span></button>`;
+  }).join("");
+  openModal(`<h2>Gieo gì ở thửa này?</h2><p class="note">Mùa ${SEASONS[se]}. Gieo tốn 1 sức.</p><div class="seedpick">${items}</div>
+   <div class="acts"><button class="btn" data-act="gotab" data-tab="cho">Ra Chợ mua giống</button><button class="btn" data-act="close">Đóng</button></div>`);
+}
+function showReset(){
+  openModal(`<h2>Chơi lại từ đầu?</h2><p>Toàn bộ ruộng, tiền và gia súc hiện tại sẽ bị xoá. Không lấy lại được.</p>
+   <div class="acts"><button class="btn" data-act="close">Thôi, chơi tiếp</button><button class="btn p" data-act="doreset">Xoá và chơi lại</button></div>`);
+}
+function showWin(){
+  openModal(`<h2>Nhà ngói đã dựng xong!</h2><p>Sau ${S.day} ngày cày cấy, gia đình anh đã có nhà ngói ba gian, to nhất xóm. Cả làng kéo đến mừng.</p>
+   <p class="note">Anh có thể chơi tiếp để làm giàu thêm, hoặc chơi lại từ đầu.</p>
+   <div class="acts"><button class="btn" data-act="reset">Chơi lại</button><button class="btn p" data-act="close">Chơi tiếp</button></div>`);
+}
+function showCredits(){
+  const list = CREDITS.length
+    ? `<ul>${CREDITS.map(c => `<li><b>${esc(c.title)}</b> · ${esc(c.author)} · ${esc(c.license)}<br><small>${esc(c.source)}</small></li>`).join("")}</ul>`
+    : `<p>Bản chơi thử này chưa dùng nhạc hay hình ảnh của tác giả khác. Hình cây trồng, vật nuôi đang là biểu tượng emoji có sẵn trên máy của người chơi.</p>`;
+  openModal(`<h2>Ghi công</h2>
+   <p class="note">Ý tưởng và thiết kế: anh Kiên. Lập trình: Claude.</p>
+   ${list}
+   <p class="note">Phông chữ: Baloo 2 và Be Vietnam Pro (Google Fonts, giấy phép SIL Open Font License).</p>
+   <div class="acts"><button class="btn p" data-act="close">Đóng</button></div>`);
+}
+
+/* ===== Vẽ giao diện ===== */
+const TABS = [["ruong","Ruộng"],["chuong","Chuồng"],["cho","Chợ"],["kho","Kho"],["nang","Nâng cấp"]];
+function render(){
+  const se = seasonOf(S.day);
+  document.getElementById("hdr").innerHTML = `
+   <div class="brand"><b>Ruộng Làng</b><span>Đại Việt · thời Lý–Trần</span></div>
+   <div class="stat"><span class="season s${se}">${SEASONS[se]}</span><span class="num">Năm ${yearOf(S.day)} · ngày ${dis(S.day)}/${SL}</span></div>
+   <div class="stat money" title="Tiền"><span class="coin" aria-hidden="true"></span><b class="num">${S.money}</b> đồng</div>
+   <div class="stat" title="Sức còn lại hôm nay">Sức <span class="bar ${S.suc <= 5 ? "low" : ""}"><i style="width:${S.suc/MAXS*100}%"></i></span><span class="num">${S.suc}</span></div>
+   <button class="iconbtn" data-act="help" aria-label="Cách chơi">?</button>
+   <button class="sleep" data-act="sleep">Đi ngủ ▸</button>`;
+
+  const bn = [];
+  if (S.ev) bn.push(`<div class="${S.ev.k}"><span>${esc(S.ev.msg)}</span></div>`);
+  else if (isPhien(S.day)) bn.push(`<div class="good"><span>Hôm nay có chợ phiên: giá bán cao hơn 25%.</span></div>`);
+  if (dis(S.day) >= SL-2) bn.push(`<div class="${S.money < taxDue() ? "bad" : ""}"><span>Cuối ngày ${SL} nộp thuế ${taxDue()} đồng ${S.money < taxDue() ? "· chưa đủ tiền" : "· đã đủ tiền"}. <small>(6 đồng mỗi thửa + 10 đồng thuế thân)</small></span></div>`);
+  document.getElementById("banner").innerHTML = bn.length ? `<div style="display:flex;flex-direction:column;gap:6px">${bn.join("")}</div>` : "";
+
+  const ripe = S.plots.some(p => p.c && p.a >= CROPS[p.c].days);
+  const hungry = S.animals.some(a => a.h > 0) || (romNeed() && (S.goods.rom||0) < romNeed());
+  document.getElementById("tabs").innerHTML = TABS.map(([id,n]) =>
+    `<button role="tab" aria-selected="${tab === id}" data-act="tab" data-tab="${id}">${n}${(id === "ruong" && ripe) || (id === "chuong" && hungry) ? '<span class="dot" aria-hidden="true"></span>' : ""}</button>`).join("");
+
+  const P = document.getElementById("panel");
+  P.innerHTML = ({ruong:vRuong, chuong:vChuong, cho:vCho, kho:vKho, nang:vNang})[tab]();
+  document.getElementById("side").innerHTML = vGoals() + vLog();
+}
+function vRuong(){
+  const se = seasonOf(S.day);
+  const needW = S.plots.filter(p => p.c && !p.w && p.a < CROPS[p.c].days).length;
+  const nRipe = S.plots.filter(p => p.c && p.a >= CROPS[p.c].days).length;
+  const tiles = S.plots.map((p,i) => {
+    if (!p.c) return `<button class="plot empty ${p.w ? "wet" : ""}" data-act="plot" data-i="${i}" aria-label="Thửa ${i+1}: đất trống, chạm để gieo"><span class="ic sm">＋</span><span class="nm">Đất trống</span></button>`;
+    const C = CROPS[p.c], r = p.a >= C.days;
+    if (r) return `<button class="plot ripe" data-act="plot" data-i="${i}" aria-label="Thửa ${i+1}: ${C.n} đã chín, chạm để gặt"><span class="ic">${C.i}</span><span class="nm">${C.n} chín · gặt</span></button>`;
+    const small = p.a < C.days/2;
+    return `<button class="plot ${p.w ? "wet" : ""}" data-act="plot" data-i="${i}" aria-label="Thửa ${i+1}: ${C.n}, ${p.w ? "đã tưới" : "khô, chạm để tưới"}">
+      <span class="tag ${p.w ? "" : "dry"}">${p.w ? "Ướt" : "Khô"}</span>
+      <span class="ic ${small ? "sm" : ""}">${small ? "🌱" : C.i}</span><span class="nm">${C.n}</span>
+      <span class="pg"><i style="width:${p.a/C.days*100}%"></i></span></button>`;
+  }).join("");
+  const add = S.plots.length < 16 ? `<button class="plot add" data-act="buyplot"><span class="ic sm">＋</span><span class="nm">Khai hoang<br>${plotPrice()} đồng</span></button>` : "";
+  const chips = Object.values(CROPS).map(C => `<span class="chip ${C.ss.includes(se) ? "" : "off"}">${C.i} ${C.n}</span>`).join("");
+  return `<h2>Cánh đồng nhà mình</h2>
+   <p class="sub">Chạm ô trống để gieo, ô “Khô” để tưới, ô viền vàng để gặt.${S.up.guong ? " Guồng nước đã tưới sẵn mỗi sáng." : ""}</p>
+   <div class="toolbar">
+     <button class="btn" data-act="waterall" ${needW ? "" : "disabled"}>Tưới hết (${needW})</button>
+     <button class="btn" data-act="harvestall" ${nRipe ? "" : "disabled"}>Gặt hết (${nRipe})</button>
+   </div>
+   <div class="field">${tiles}${add}</div>
+   <div class="guide"><span class="note" style="margin-right:4px">Mùa ${SEASONS[se]} trồng được:</span>${chips}</div>`;
+}
+function vChuong(){
+  const need = romNeed(), have = S.goods.rom||0;
+  const list = S.animals.length ? S.animals.map((a,i) => {
+    const A = ANIMALS[a.t];
+    let st = a.h ? `<span class="pill bad">Đói ${a.h} ngày</span>` : `<span class="pill good">No</span>`;
+    let extra = a.t === "lon" ? (a.f >= A.fat ? " · đã béo" : " · béo sau " + (A.fat - a.f) + " ngày ăn no") : a.t === "trau" ? " · giúp gặt lúa thêm 1 thóc" : " · 1 trứng mỗi ngày";
+    return `<div class="row"><span class="e">${A.i}</span><span class="t"><b>${A.n}${st}</b><small>Ăn ${A.eat} rơm cỏ/ngày${extra}</small></span>
+     <span class="a"><button class="btn s" data-act="sellanimal" data-i="${i}">Bán ${animalValue(a)}đ</button></span></div>`;
+  }).join("") : `<p class="note">Chuồng đang trống.</p>`;
+  const shop = Object.entries(ANIMALS).map(([t,A]) => `<div class="row"><span class="e">${A.i}</span><span class="t"><b>${A.n}</b><small>${A.desc}</small></span>
+    <span class="a"><button class="btn s p" data-act="buyanimal" data-t="${t}">Mua ${A.price}đ</button></span></div>`).join("");
+  return `<h2>Chuồng trại</h2>
+   <p class="sub">Đang nuôi ${S.animals.length}/${cap()} con. Mỗi tối gia súc tự ăn rơm cỏ trong kho.</p>
+   <div class="box" style="background:var(--bg)"><b>Rơm cỏ trong kho: ${have}</b><br>
+     <span class="note">Cần ${need} mỗi ngày${need ? " · đủ cho " + Math.floor(have/need) + " ngày" : ""}. Có rơm từ gặt lúa và trồng cỏ, hoặc mua ở chợ (${romBuy()} đồng/bó${seasonOf(S.day) === 3 ? ", mùa Đông đắt" : ""}).</span>
+     <div class="toolbar" style="margin:8px 0 0"><button class="btn s" data-act="buyrom" data-n="5">Mua 5 bó · ${romBuy()*5}đ</button><button class="btn s" data-act="buyrom" data-n="20">Mua 20 bó · ${romBuy()*20}đ</button></div>
+   </div>
+   <div class="sec"><h3>Đang nuôi</h3><div class="rows">${list}</div></div>
+   <div class="sec"><h3>Mua gia súc</h3><div class="rows">${shop}</div></div>`;
+}
+function vCho(){
+  const ar = {up:"▲", down:"▼", flat:"–"};
+  const goods = Object.entries(GOODS).map(([g,G]) => {
+    const have = S.goods[g]||0, pr = sellPrice(g), tr = trend(g);
+    return `<div class="row"><span class="e">${G.i}</span><span class="t"><b>${G.n}</b><small class="num">Trong kho: ${have} · giá <b style="display:inline" class="${tr}">${pr}đ ${ar[tr]}</b></small></span>
+     <span class="a"><button class="btn s" data-act="sell" data-g="${g}" ${have ? "" : "disabled"}>Bán 1</button><button class="btn s p" data-act="sellall" data-g="${g}" ${have ? "" : "disabled"}>Bán hết ${have ? "· " + pr*have + "đ" : ""}</button></span></div>`;
+  }).join("");
+  const se = seasonOf(S.day);
+  const seeds = Object.entries(CROPS).map(([c,C]) => {
+    const outs = Object.entries(C.out).map(([g,n]) => n + " " + GOODS[g].n).join(" + ");
+    return `<div class="row"><span class="e">${C.i}</span><span class="t"><b>${C.n}${C.ss.includes(se) ? "" : '<span class="pill">trái mùa</span>'}</b><small>Mùa ${C.ss.map(x => SEASONS[x]).join(", ")} · ${C.days} đêm · được ${outs}${C.note ? " · " + C.note : ""} · có ${S.seeds[c]||0}</small></span>
+     <span class="a"><button class="btn s" data-act="buyseed" data-c="${c}" data-n="1">Mua 1 · ${C.seed}đ</button><button class="btn s p" data-act="buyseed" data-c="${c}" data-n="5">Mua 5 · ${C.seed*5}đ</button></span></div>`;
+  }).join("");
+  return `<h2>Chợ làng</h2>
+   <p class="sub">Giá thay đổi mỗi ngày. ▲ là tăng, ▼ là giảm so với hôm qua. Ngày 5 và 10 mỗi mùa có chợ phiên, giá bán cao hơn 25%.${isPhien(S.day) ? " <b>Hôm nay là chợ phiên.</b>" : ""}</p>
+   <div class="grid2"><div style="min-width:0"><h3 style="font-family:var(--fd)">Bán nông sản</h3><div class="rows">${goods}</div></div>
+   <div style="min-width:0"><h3 style="font-family:var(--fd)">Mua giống</h3><div class="rows">${seeds}</div></div></div>`;
+}
+function vKho(){
+  const goods = Object.entries(GOODS).map(([g,G]) => `<div class="row"><span class="e">${G.i}</span><span class="t"><b>${G.n}</b></span><span class="a num"><b>${S.goods[g]||0}</b></span></div>`).join("");
+  const seeds = Object.entries(CROPS).map(([c,C]) => `<div class="row"><span class="e">${C.i}</span><span class="t"><b>Giống ${C.n}</b></span><span class="a num"><b>${S.seeds[c]||0}</b></span></div>`).join("");
+  return `<h2>Kho nhà</h2><p class="sub">Tiến độ được lưu tự động trên trình duyệt này.</p>
+   <div class="grid2"><div style="min-width:0"><h3 style="font-family:var(--fd)">Nông sản</h3><div class="rows">${goods}</div></div>
+   <div style="min-width:0"><h3 style="font-family:var(--fd)">Hạt giống</h3><div class="rows">${seeds}</div></div></div>
+   <div class="mobile-only sec">${vGoals()}</div>
+   <div class="mobile-only sec">${vLog()}</div>
+   <div class="toolbar sec"><button class="btn" data-act="help">Cách chơi</button><button class="btn" data-act="credits">Ghi công</button><button class="btn" data-act="reset">Chơi lại từ đầu</button></div>`;
+}
+function vNang(){
+  const plot = S.plots.length < 16
+    ? `<div class="row"><span class="e">＋</span><span class="t"><b>Khai hoang thêm ruộng</b><small>Đang có ${S.plots.length}/16 thửa. Thêm ruộng thì thuế mỗi mùa tăng 6 đồng.</small></span><span class="a"><button class="btn s p" data-act="buyplot">${plotPrice()}đ</button></span></div>`
+    : `<div class="row"><span class="e">＋</span><span class="t"><b>Khai hoang thêm ruộng</b><small>Đã đủ 16 thửa.</small></span><span class="a"></span></div>`;
+  const ups = UPG.map(u => `<div class="row"><span class="e">${u.id === "nha" ? "🏠" : u.id === "guong" ? "🎡" : u.id === "de" ? "⛰️" : u.id === "cho" ? "🐕" : "🛖"}</span><span class="t"><b>${u.n}${S.up[u.id] ? '<span class="pill good">Đã có</span>' : ""}</b><small>${u.desc}</small></span>
+    <span class="a">${S.up[u.id] ? "" : `<button class="btn s p" data-act="upg" data-id="${u.id}">${u.price.toLocaleString("vi-VN")}đ</button>`}</span></div>`).join("");
+  return `<h2>Nâng cấp</h2><p class="sub">Đầu tư để làm ăn dễ hơn và phòng thiên tai.</p><div class="rows">${plot}${ups}</div>`;
+}
+function vGoals(){
+  return `<div class="box"><h3>Mục tiêu</h3>${GOALS.map(g => `<div class="goal ${S.goals[g.id] ? "done" : ""}"><i></i><span>${g.t}${g.r ? ` <small>+${g.r}đ</small>` : ""}</span></div>`).join("")}</div>`;
+}
+function vLog(){
+  return `<div class="box"><h3>Nhật ký</h3>${S.log.length ? `<ul class="log">${S.log.slice(0,25).map(l => `<li class="${l.k === "bad" ? "bad" : ""}"><span>N${l.d}</span>${esc(l.t)}</li>`).join("")}</ul>` : `<p class="note">Chưa có gì. Bấm “Đi ngủ” để sang ngày mới.</p>`}</div>`;
+}
+
+/* ===== Sự kiện chạm ===== */
+document.addEventListener("click", e => {
+  if (e.target === modal && !modalLock){ closeModal(); return; }
+  const el = e.target.closest("[data-act]"); if (!el) return;
+  const d = el.dataset;
+  switch (d.act){
+    case "tab": tab = d.tab; render(); window.scrollTo({top:0}); break;
+    case "gotab": tab = d.tab; closeModal(); render(); break;
+    case "plot": tapPlot(+d.i); break;
+    case "plant": plant(+d.i, d.c); break;
+    case "waterall": waterAll(); break;
+    case "harvestall": harvestAll(); break;
+    case "sleep": sleep(); break;
+    case "sell": sellGood(d.g, false); break;
+    case "sellall": sellGood(d.g, true); break;
+    case "buyseed": buySeed(d.c, +d.n); break;
+    case "buyrom": buyRom(+d.n); break;
+    case "buyanimal": buyAnimal(d.t); break;
+    case "sellanimal": sellAnimal(+d.i); break;
+    case "upg": buyUpg(d.id); break;
+    case "buyplot": buyPlot(); break;
+    case "help": showHelp(); break;
+    case "credits": showCredits(); break;
+    case "closehelp": S.seenHelp = true; save(); closeModal(); break;
+    case "close": closeModal(); break;
+    case "reset": showReset(); break;
+    case "doreset": S = fresh(); tab = "ruong"; save(); closeModal(); render(); showHelp(); break;
+  }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !modal.hidden) closeModal(); });
+
+function start(data){
+  S = (data && data.S) || load() || fresh();
+  tab = (data && data.tab) || "ruong";
+  render();
+  if (!S.seenHelp) showHelp();
+}
+try { window.claude?.hot?.snapshot?.(() => ({S, tab})); } catch(e){}
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>

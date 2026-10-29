@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nhật ký Ruộng Làng</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700&family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Bố cục: một cột hẹp, đầu trang là 3 chỗ chơi, dưới là dòng thời gian theo bản, chia thẻ 2D / 3D */
+:root{
+  --bg:#f2f5ec; --panel:#ffffff; --fg:#1c2a1f; --muted:#5b6b5c; --line:#d6dfcd;
+  --lua:#2e7a47; --lua-soft:#e1efe2; --dat:#a5591c; --dat-soft:#f6e8db;
+  --f-display:"Lexend",system-ui,sans-serif; --f-body:"Be Vietnam Pro",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121914; --panel:#1a231c; --fg:#e4ecdf; --muted:#9aab9a; --line:#2c3a2e;
+  --lua:#6cc48a; --lua-soft:#1f3326; --dat:#e0a06a; --dat-soft:#3a2a1c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121914; --panel:#1a231c; --fg:#e4ecdf; --muted:#9aab9a; --line:#2c3a2e;
+  --lua:#6cc48a; --lua-soft:#1f3326; --dat:#e0a06a; --dat-soft:#3a2a1c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,6vw,36px);line-height:1.15;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:500;font-size:19px;margin:0}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--lua);font-weight:600}
+.play{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.play a{display:flex;flex-direction:column;gap:4px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:inherit;text-decoration:none;min-width:0}
+.play a:hover,.play a:focus-visible{border-color:var(--lua);outline:none}
+.play b{font-family:var(--f-display);font-weight:500;font-size:16px}
+.play span{font-size:13px;color:var(--muted)}
+.play .go{color:var(--lua);font-weight:600;font-size:13px;margin-top:4px}
+.note{background:var(--dat-soft);border-radius:10px;padding:12px 16px;font-size:14px}
+.note b{color:var(--dat)}
+.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line)}
+.tabs button{font:inherit;font-weight:600;background:none;border:0;border-bottom:3px solid transparent;padding:8px 4px;margin-right:12px;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--fg);border-color:var(--lua)}
+.tabs button:focus-visible{outline:2px solid var(--lua);outline-offset:2px}
+.tabs small{font-family:var(--f-mono);font-weight:500;color:var(--muted);margin-left:4px}
+ol.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tl li{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.tl li:last-child{border-bottom:0}
+.num{font-family:var(--f-display);font-weight:700;font-size:22px;color:var(--lua);line-height:1.1}
+.num small{display:block;font-family:var(--f-body);font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.04em}
+.body{min-width:0;display:flex;flex-direction:column;gap:6px}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.top h3{font-family:var(--f-display);font-weight:500;font-size:16px;margin:0}
+.time{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.chip{font-size:11px;font-weight:600;padding:1px 8px;border-radius:99px;background:var(--lua-soft);color:var(--lua)}
+.chip.dat{background:var(--dat-soft);color:var(--dat)}
+.body ul{margin:0;padding-left:18px;color:var(--fg)}
+.body ul li{display:list-item;padding:0;border:0;font-size:14px}
+.links{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px}
+.links a{color:var(--lua);font-weight:600}
+.src{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);word-break:break-all}
+.ctrl{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted);margin-top:4px}
+.ctrl button{font:inherit;font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 10px;color:var(--fg);cursor:pointer}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:440px){.tl li{grid-template-columns:48px 1fr;gap:10px}.num{font-size:19px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Ruộng Làng Đại Việt</div>
+    <h1>Nhật ký các bản game</h1>
+    <p class="lead">Mọi bản đã làm của game 2D và bản thử 3D, xếp theo thời gian: bản nào, làm lúc nào, thêm gì, chơi ở đâu. Giờ ghi theo giờ Việt Nam.</p>
+  </header>
+
+  <section aria-labelledby="choi">
+    <h2 id="choi" style="margin-bottom:12px">Chơi ngay bản mới nhất</h2>
+    <div class="play">
+      <a href="https://vinhkiend.github.io/ruong-lang/" target="_blank" rel="noopener"><b>Game 2D, bản 18</b><span>Bản mới nhất, hình điểm ảnh, có truyện "Ngọc trong bùn"</span><span class="go">Mở link →</span></a>
+      <a href="https://vinhkiend.github.io/ruong-lang/ban/3d/" target="_blank" rel="noopener"><b>Bản thử 3D xóm Bãi</b><span>Phiên bản 4, có hoạt ảnh làm ruộng, câu cá</span><span class="go">Mở link →</span></a>
+    </div>
+  </section>
+
+  <div class="note"><b>Chơi lại bản cũ:</b> mỗi bản có nút "Chơi bản này". Mỗi bản lưu ván riêng trên trình duyệt. Các bản từ 8 trở đi có thể thiếu cây lớn và mèo ngồi vì hai bộ hình này không được phép đưa lên mạng công khai.</div>
+
+  <section>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="t2d" aria-selected="true" aria-controls="p2d">Game 2D <small>18 bản</small></button>
+      <button role="tab" id="t3d" aria-selected="false" aria-controls="p3d">Bản thử 3D <small>4 bản</small></button>
+    </div>
+    <div class="ctrl"><button id="order" type="button">Xem bản mới nhất trước</button></div>
+    <ol class="tl" id="p2d" role="tabpanel" aria-labelledby="t2d"></ol>
+    <ol class="tl" id="p3d" role="tabpanel" aria-labelledby="t3d" hidden></ol>
+  </section>
+
+  <footer>Cập nhật 29/10/2026. Khi có bản mới, trang này sẽ được bổ sung thêm một dòng.</footer>
+</div>
+
+<script>
+const GHB="https://vinhkiend.github.io/ruong-lang/ban/", A7="https://claude.ai/artifact/XC7bVLy23i7v7bTTbrnZqq", A18="https://claude.ai/artifact/V6wT6AdvL2WjVKJvVn943p", GH="https://vinhkiend.github.io/ruong-lang/", A3D="https://claude.ai/artifact/4qanDCKkVrNjBHN9nEpuxV";
+const D2=[
+ [1,"28/10 18:53","Bản chơi thử đầu tiên",[],["Gieo, tưới, gặt, bán chợ, khai hoang 6–16 thửa","6 loại cây theo mùa; gà, lợn, trâu","4 mùa × 10 ngày, thuế cuối mùa, sự kiện lũ, hạn, châu chấu"],A7],
+ [2,"28/10 19:01","Chỉnh sửa sau chơi thử",[],["Sửa và cân lại lối chơi bản 1"],A7],
+ [3,"28/10 19:04","Nhạc và hình tự làm",[],["Nhạc ngũ cung, hình vẽ tự làm thay cho tài nguyên ngoài"],A7],
+ [4,"28/10 21:31","Thế giới mở",[],["Bản đồ đi lại được, phím WASD/E, chạm để đi","Cần điều khiển trên điện thoại, nút Làm"],A7],
+ [5,"28/10 21:45","Nhiệm vụ và túi đồ",[],["Bảng Nhiệm vụ, Túi đồ","Nhân vật 4 hướng đeo gùi"],A7],
+ [6,"28/10 22:43","Hướng Harvest Moon",["mốc lớn"],["23 nhiệm vụ 4 chương; 3 vùng xóm Bãi, làng Dâu, phủ Thiên Đức","Đồng hồ 6h–24h, 13 người làng có 10 tim, mèo Mướp"],A7],
+ [7,"28/10 23:04","Tiếng xấu, cưới vợ, đồ nghề",[],["Trộm, cân điêu, trốn thuế thì bị bắt giam, phạt","Tỏ tình, cầu hôn Thắm, Đào, Ngọc","Cuốc, bình tưới, liềm, cần câu; hội làng ngày 7"],A7],
+ [8,"28/10 23:40","Chuyển sang hình điểm ảnh",["mốc lớn","link mới"],["Hình Ninja Adventure, nhân vật tự vẽ dáng cao","Mèo ngồi, cây 4 mùa"],A18],
+ [9,"29/10 00:02","Thuốc nam, miếu, thuyền buôn",[],["Hái 8 vị thuốc nam, ấm sắc thuốc, người và gia súc ốm","Miếu thổ địa xin quẻ, thuyền buôn ngày 3 và 8","Đi 8 hướng"],A18],
+ [10,"29/10 02:11","Núi và hang 20 tầng",[],["Vùng núi, đào đá trong hang 20 tầng","Linh chi, hà thủ ô tăng sức tối đa"],A18],
+ [11,"29/10 02:19","Phường đúc, mài ngọc, cổ vật",[],["Nâng cấp đồ nghề, mài ngọc, trâm và nhẫn","Đào cổ vật, tàng thư chùa Dâu"],A18],
+ [12,"29/10 02:24","Bản đồ kho lương, cáo trắng",[],["Gom 4 mảnh bản đồ kho lương","Cáo trắng đêm ngày 10, danh hiệu"],A18],
+ [13,"29/10 02:28","Lớp học, thi Thái học sinh",[],["Học thầy Chu, thi mỗi mùa","Chương Diên Hồng từ ngày 21"],A18],
+ [14,"29/10 07:41","Truyện \"Ngọc trong bùn\" ch.1–2",["mốc lớn"],["Cốt truyện chương 1–2, đánh trực tiếp có chiêu kết liễu","Hoạt ảnh cuốc, tưới, gặt...","14.1–14.2: ẩn/hiện ô nhiệm vụ, bản đồ tổng thể có sương mù"],A18],
+ [15,"29/10 09:14","Thợ rèn, thầy bói, võ đường",[],["Rèn kiếm, giáp, khiên; thầy bói dự báo, bán bùa","Võ đường 5 bậc, bà mối, bá hộ Lê, bé Cò"],A18],
+ [16,"29/10 09:23","Cho vay, góp hụi, chợ trời",[],["Cho vay lấy lãi, sổ nợ (phím N)","Góp hụi với bà Tư, bày sạp chợ trời"],A18],
+ [17,"29/10 09:28","Săn và cưỡi ngựa",[],["Ném thòng lọng bắt ngựa hoang, thuần, cưỡi (phím H)"],A18],
+ [18,"29/10 09:35","Vào trong nhà",["mới nhất","có bản công khai"],["Bước vào nhà, quán, đình, hiệu thuốc, lò rèn, phủ, quán trọ","Bếp nấu ăn, thắp hương, trống kêu oan"],A18,GH],
+];
+const D3=[
+ [1,"29/10 11:30","Sa bàn xóm Bãi",["mốc lớn"],["Sông, bến, thuyền nan, ao sen vịt, nhà tranh 3 gian","12 thửa ruộng nước: cuốc, gieo, lớn, gặt","Ngày đêm, đèn dầu, đom đóm"]],
+ [2,"29/10 11:40","Đẹp hơn",[],["Tán cây bo tròn, mái tranh 3 lớp, nước lấp lánh","Nút hình Cao/Thấp cho máy yếu"]],
+ [3,"29/10 11:50","Chơi trên điện thoại",[],["Sửa lỗi kẹt nhân vật lúc vào game","Cần điều khiển ảo, nhìn xa hơn khi cầm dọc"]],
+ [4,"29/10 12:10","Hoạt ảnh làm ruộng",["mới nhất"],["Cuốc, gieo, tưới, gặt, múc giếng, rải thóc cho gà","Câu cá ao và sông, nhặt trứng, bướm, bóng mây"]],
+];
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function row(d,is3d){
+  const [n,t,title,tags,items,link,gh]=d;
+  const chips=tags.map(x=>`<span class="chip${x==="link mới"||x==="có bản công khai"?" dat":""}">${esc(x)}</span>`).join("");
+  let links="";
+  if(is3d) links=n===4?`<a href="${GHB}3d/" target="_blank" rel="noopener">Chơi bản này</a>`:`<span class="src">Bản này đã được sửa thẳng thành bản 4 nên không còn riêng để chơi lại</span>`;
+  else{
+    links=`<a href="${GHB}v${n}/" target="_blank" rel="noopener">Chơi bản này</a>`;
+    if((link===A7&&n===7)||(link===A18&&n===18)) links+=``;
+  }
+  const src=is3d?(n===4?"ban-thu-3d/xom-bai-3d.html":""):`ruong-lang-v${n}.html`;
+  return `<li><div class="num"><small>BẢN</small>${n}</div><div class="body"><div class="top"><h3>${esc(title)}</h3><span class="time">${t}</span>${chips}</div><ul>${items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul><div class="links">${links}</div>${src?`<div class="src">Mã nguồn: game-nong-trai/${src}</div>`:""}</div></li>`;
+}
+let newest=false;
+function render(){
+  const a=newest?[...D2].reverse():D2, b=newest?[...D3].reverse():D3;
+  document.getElementById("p2d").innerHTML=a.map(d=>row(d,false)).join("");
+  document.getElementById("p3d").innerHTML=b.map(d=>row(d,true)).join("");
+  document.getElementById("order").textContent=newest?"Xem bản cũ nhất trước":"Xem bản mới nhất trước";
+}
+try{newest=localStorage.getItem("nk_order")==="new"}catch(e){}
+render();
+document.getElementById("order").onclick=()=>{newest=!newest;try{localStorage.setItem("nk_order",newest?"new":"old")}catch(e){}render()};
+function tab(is3d){
+  document.getElementById("t2d").setAttribute("aria-selected",!is3d);
+  document.getElementById("t3d").setAttribute("aria-selected",is3d);
+  document.getElementById("p2d").hidden=is3d;document.getElementById("p3d").hidden=!is3d;
+}
+document.getElementById("t2d").onclick=()=>tab(false);
+document.getElementById("t3d").onclick=()=>tab(true);
+</script>
