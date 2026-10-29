@@ -1097,6 +1097,10 @@ function showHelp(){
    <li><b>Cáo trắng:</b> đêm rằm cuối mỗi mùa (ngày 10), sau 23 giờ, cáo trắng hiện ở xóm Bãi. Đi theo nó đến gốc đa để mở hòm quà. Vòng cáo trắng giúp đi đêm không bị lính tuần bắt lỗi.</li>
    <li><b>Truyện Ngọc trong bùn:</b> xong chương nhiệm vụ “Ra riêng lập nghiệp” thì đêm bão sẽ tới. Truyện chỉ chạy khi anh tự tới chỗ có dấu chấm than vàng và bấm Làm. Theo dõi ở bảng Nhiệm vụ.</li>
    <li><b>Đánh trong hang:</b> J đánh (3 đòn liên tiếp), giữ K đỡ (đỡ đúng lúc thì hất ngược), Shift né, L kết liễu khi khí thế đầy và giặc đã quỳ. Ngất thì tỉnh dậy ở hiệu thuốc, mất ít tiền.</li>
+   <li><b>Vào trong nhà:</b> đến cửa nhà mình, quán nước, đình, hiệu thuốc, phường đúc, công đường, quán trọ bấm Làm để bước vào. Trong nhà mình có giường, bàn thờ, rương, bếp nấu ăn hồi sức. Đi ra cửa dưới để ra ngoài.</li>
+   <li><b>Săn và cưỡi ngựa:</b> mua dây thòng lọng ở chợ làng Dâu, lên núi Thiên Thai lại gần ngựa hoang thật nhẹ (đi nhanh là ngựa chạy), bấm Làm để quăng dây, ghì cương 3 lượt để thuần. Phím H hoặc nút Cưỡi ngựa để lên, xuống ngựa.</li>
+   <li><b>Cho vay, góp hụi, chợ trời:</b> người làng tự sang hỏi vay, trả lời trong Sổ nợ (phím N). Góp hụi ở chỗ bà mối Tư. Chợ trời ở bãi đất phía nam chợ làng Dâu: bày hàng trong kho, tự đặt giá.</li>
+   <li><b>Rèn binh khí, xem bói, học võ:</b> bác Thiết ở phường đúc phủ rèn kiếm, giáp, khiên (qua đêm). Thầy bói Thông ở gốc đa đầu chợ làng Dâu xem trước thời tiết ngày mai, tình duyên, vận truyện. Võ sư Đinh Hổ ở phố huyện dạy võ mỗi ngày một buổi.</li>
    <li><b>Đi học, đi thi:</b> vào đình làng Dâu (hoặc trò chuyện với thầy đồ Chu) để học mỗi ngày một buổi. Đủ 10 điểm học thì ngày 6 mỗi mùa lên công đường phủ huyện thi Thái học sinh: 5 câu, đúng 4 là đỗ, được giảm 3 thóc tô thuế mỗi mùa.</li>
    <li><b>Chương Diên Hồng:</b> từ ngày 21, giặc Nguyên sắp sang. Trong 30 ngày góp qua lý trưởng 100 thóc, 20 giáo sắt (rèn ở phường đúc), 2 trâu, 10 thuốc bổ hoặc thuốc cảm.</li>
    <li><b>Phạm luật và tiếng xấu:</b> hái trộm vườn cam bá hộ, cân điêu ở chợ, trốn thuế, đi đêm quá 23 giờ ở làng hay phố bị lính bắt gặp đều mang tiếng xấu. Từ 60 điểm, lính bắt giải lên phủ, giam 2 đến 3 ngày và phạt tiền. Mỗi đêm tiếng xấu giảm 5 điểm; có thể tự nộp phạt ở công đường hay nhà ngục để xoá.</li>
@@ -1739,7 +1743,9 @@ function render(){
   const nC = claimable();
   document.getElementById("fabs").innerHTML = `<button class="fab" data-act="nv" aria-label="Nhiệm vụ${nC ? ", " + nC + " phần thưởng chờ nhận" : ""}">${RLA.art("thoc")}Nhiệm vụ${nC ? `<span class="badge">${nC}</span>` : ""}</button>
    <button class="fab" data-act="quanhe" aria-label="Sổ quan hệ">${RLA.art("tim")}Quan hệ</button>
-   <button class="fab" data-act="tui" aria-label="Túi đồ">${RLA.art("rom")}Túi đồ</button>`;
+   <button class="fab" data-act="tui" aria-label="Túi đồ">${RLA.art("rom")}Túi đồ</button>
+   <button class="fab" data-act="sono" aria-label="Sổ nợ${x16().req.length ? ", " + x16().req.length + " người hỏi vay" : ""}"><span aria-hidden="true" style="font-size:22px;line-height:1">📒</span>Sổ nợ${x16().req.length ? `<span class="badge">${x16().req.length}</span>` : ""}</button>${curH() ? `
+   <button class="fab" data-act="x17" data-k="ride" aria-label="${RIDE ? "Xuống ngựa" : "Cưỡi ngựa"}"><span aria-hidden="true" style="font-size:22px;line-height:1">🐎</span>${RIDE ? "Xuống ngựa" : "Cưỡi ngựa"}</button>` : ""}`;
   document.getElementById("tools").innerHTML = vTools();
   document.getElementById("news").innerHTML = vTracker() + (bn.length
     ? `<button class="newsbtn" data-act="news" aria-expanded="${newsOpen}">${newsOpen ? "Ẩn tin ▴" : "Tin hôm nay (" + bn.length + ") ▾"}</button>${newsOpen ? `<div class="items">${bn.join("")}</div>` : ""}`
@@ -1920,6 +1926,7 @@ function ensureBg(){
   const g = bg.getContext("2d"); g.setTransform(BGS,0,0,BGS,0,0); g.imageSmoothingEnabled = false; BGTXT = []; paintBg(g);
 }
 function paintBg(g){
+  if (S.map.startsWith("in_")){ g.fillStyle = "#231C16"; g.fillRect(0, 0, MW*T, MH*T); return; }
   const se = seasonOf(S.day), R = rng(11 + ORDER.indexOf(S.map)*7), [gr, grd, grl] = GRASS[se];
   g.fillStyle = gr; g.fillRect(0, 0, MW*T, MH*T);
   /* Mặt đất lát bằng ô điểm ảnh: cỏ đổi màu theo mùa, đường đất, bãi cát, nước, ruộng, đá lát */
@@ -2674,7 +2681,7 @@ function enterPlace(k){
   else openPanel(k);
 }
 function askSleep(){
-  const home = S.map === "nha";
+  const home = S.map === "nha" || S.map === "in_nha";
   openModal(`<h2>${home ? "Nhà mình" : "Đi ngủ?"}</h2><p>Bây giờ là ${clockText()}, hôm nay còn ${S.suc}/${MAXS} sức. Đi ngủ để sang ngày mới?</p>
    <p class="note">Đêm nay cây được tưới sẽ lớn thêm, gia súc ăn rơm cỏ trong kho. Sáng mai anh thức dậy ở nhà lúc 6 giờ.${home ? "" : " Anh đang ở " + esc(MAPS[S.map].n) + ", có thể tự đi bộ về nhà, hoặc ngủ luôn (sáng mai thức dậy ở nhà)."}</p>
    <div class="acts"><button class="btn" data-act="close">Chưa, làm tiếp</button>${home ? "" : `<button class="btn" data-act="goto" data-place="nha">Đi bộ về nhà</button>`}<button class="btn p" data-act="sleep">Đi ngủ</button></div>`);
@@ -2894,6 +2901,7 @@ document.addEventListener("keydown", e => {
   else if (e.code === "KeyQ") openPanel("nv");
   else if (e.code === "KeyI") openPanel("tui");
   else if (e.code === "KeyR") openPanel("quanhe");
+  else if (e.code === "KeyN") openPanel("sono");
   else if (/^Digit[1-5]$/.test(e.code)) pickTool(TOOLS[+e.code.slice(5) - 1].k);
 });
 document.addEventListener("keyup", e => held.delete(e.code));
@@ -2958,7 +2966,7 @@ function update(dt){
   let l = Math.hypot(mx, my); if (l > 1){ mx /= l; my /= l; l = 1; }
   P.mv = false;
   if (l > 0.12 && free){
-    const sp = 150*(S.gay ? 1.2 : 1)*dt*(l < 0.5 ? 0.6 : 1), ox = P.x, oy = P.y;
+    const sp = 150*(S.gay ? 1.2 : 1)*rideMul()*dt*(l < 0.5 ? 0.6 : 1), ox = P.x, oy = P.y;
     tryMove(P, mx*sp, my*sp);
     const moved = Math.hypot(P.x - ox, P.y - oy);
     walked += moved;
@@ -3116,7 +3124,7 @@ function draw(t){
   sp.sort((a, b) => a[0] - b[0]).forEach(s => s[1]());
   drawFx(); if (FISH) drawFish(t);
   /* Lớp màu theo giờ: bình minh, hoàng hôn, đêm tối có quầng sáng quanh người; mùa Đông se lạnh, nắng hạn vàng gắt */
-  const hr = S.time/60, dark = S.map === "hang" ? 0 : hr < 7 ? (7 - hr)*0.22 : Math.max(0, Math.min(1, (hr - 18)/3))*0.66, dusk = (S.map === "hang" ? 0 : 1)*Math.max(0, 1 - Math.abs(hr - 18)/1.6)*0.2;
+  const hr = S.time/60, dark = (S.map === "hang" || S.map.startsWith("in_")) ? 0 : hr < 7 ? (7 - hr)*0.22 : Math.max(0, Math.min(1, (hr - 18)/3))*0.66, dusk = (S.map === "hang" || S.map.startsWith("in_") ? 0 : 1)*Math.max(0, 1 - Math.abs(hr - 18)/1.6)*0.2;
   if (dark > 0.02){
     cx.globalCompositeOperation = "lighter";
     const glow = (wx, wy, r, a) => { const gr = cx.createRadialGradient(wx, wy, 0, wx, wy, r); gr.addColorStop(0, `rgba(255,190,90,${a})`); gr.addColorStop(1, "rgba(255,190,90,0)"); cx.fillStyle = gr; cx.fillRect(wx - r, wy - r, 2*r, 2*r); };
@@ -3135,7 +3143,7 @@ function draw(t){
     gr.addColorStop(0, `rgba(14,18,46,${dark*0.35})`); gr.addColorStop(1, `rgba(14,18,46,${dark})`);
     cx.fillStyle = gr; cx.fillRect(0, 0, W, H);
   }
-  if (S.ev && S.ev.id === "mua"){
+  if (S.ev && S.ev.id === "mua" && !S.map.startsWith("in_")){
     cx.strokeStyle = "rgba(210,225,255,.5)"; cx.lineWidth = 1.2; cx.beginPath();
     for (let i = 0; i < 90; i++){ const rx = ((i*97.3 + t*60) % (W + 40)) - 20, ry = ((i*53.1 + t*520) % (H + 40)) - 20; cx.moveTo(rx, ry); cx.lineTo(rx - 4, ry + 12); }
     cx.stroke();
@@ -3233,6 +3241,11 @@ document.addEventListener("click", e => {
     case "scnext": scNext(); break;
     case "scpick": scPick(+d.i); break;
     case "ct": ctAct(d.k); break;
+    case "x15": x15Act(d.k, d); break;
+    case "x16": x16Act(d.k, d); break;
+    case "x17": x17Act(d.k, d); break;
+    case "x18": x18Act(d.k, d); break;
+    case "sono": openPanel("sono"); break;
     case "floor": closeModal(); S.cave = null; goFloor(+d.f); break;
     case "duoc": if (S.goods.than > 0 && S.goods.rom > 0){ S.goods.than--; S.goods.rom--; S.goods.duoc = (S.goods.duoc||0) + 1; RLA.sfx("mua"); toast("Bó rơm quấn than, làm xong 1 cây đuốc."); commit(); } break;
     case "eatmax": eatMax(d.g); break;
@@ -4362,7 +4375,7 @@ function scShow(){
   const body = s.ask
     ? `<p class="say">${esc(s.ask)}</p><div class="acts talkacts">${s.opts.map((o, i) => `<button class="btn ${i ? "" : "p"}" data-act="scpick" data-i="${i}">${esc(o[0])}</button>`).join("")}</div>`
     : `<p class="say${s.who ? "" : " ke"}">${s.who ? "“" + esc(s.say) + "”" : esc(s.say)}</p>${s.note ? `<p class="note">${esc(s.note)}</p>` : ""}<div class="acts"><button class="btn p" data-act="scnext">${SC.i === SC.L.length - 1 ? "Xong" : "Tiếp ›"}</button></div>`;
-  openModal(`<p class="cthead">Ngọc trong bùn${SC.title ? " · " + esc(SC.title) : ""}</p>${name ? `<div class="talk">${pic}<div class="tk"><h2>${esc(name)}</h2></div></div>` : ""}${body}`, true);
+  openModal(`<p class="cthead">${SC.head || "Ngọc trong bùn"}${SC.title ? " · " + esc(SC.title) : ""}</p>${name ? `<div class="talk">${pic}<div class="tk"><h2>${esc(name)}</h2></div></div>` : ""}${body}`, true);
   drawPortraits(sheet); drawMePortrait(sheet);
 }
 function scNext(){ if (!SC) return; SC.i++; RLA.sfx("tap"); scShow(); }
@@ -4733,10 +4746,10 @@ function drawHeld(tool, pose, dir, x, y, aim, g){
   }
 }
 const WPN = {gay:{n:"Gậy tre", dmg:1, rng:36, arc:0.55, fin:"Quét chân trâu"}, giao:{n:"Giáo sắt", dmg:1.5, rng:48, arc:0.75, fin:"Giáo xoáy sông Cái"}, kiem:{n:"Gươm cổ", dmg:2, rng:40, arc:0.45, fin:"Sát Thát"}};
-const wpn = () => S.goods.kiemco > 0 ? "kiem" : S.goods.giao > 0 ? "giao" : "gay";
+let wpn = () => S.goods.kiemco > 0 ? "kiem" : S.goods.giao > 0 ? "giao" : "gay";
 const COMBO = {gay:[["guard","thrust",0.2,1],["guard","sweep",0.4,1.5],["up","down",0,1.2]], giao:[["guard","thrust",0.9,1],["guard","thrust",0.9,1],["up","thrust",0.1,1]], kiem:[["up","down",0,1.2],["guard","sweep",0.4,1.6],["up","down",0,1.3]]};
 function drawMe(){
-  const t = performance.now()/1000, w = wpn();
+  const t = performance.now()/1000, w = wbase();
   let pose = null, tool = null, aim = 1, dir = P.dir, dy = 0, g = null;
   if (P.fin){
     const e = P.fin.e;
@@ -4820,7 +4833,7 @@ function atkHit(){
     if (d > 16 && (dx*ux + dy*uy)/d < Math.cos(W.arc + (n === 1 ? 0.5 : 0))) continue;
     if (f.st === "hop") continue;
     any = true;
-    const dmg = W.dmg*(n === 2 ? 1.5 : 1);
+    const dmg = Math.round(W.dmg*(n === 2 ? 1.5 : 1)*voMul()*10)/10;
     f.hp = Math.max(0, f.hp - dmg); f.st = f.st === "kneel" ? "kneel" : "hurt"; f.tt = 0.25;
     const kb = n === 2 ? 240 : 120; f.vx = dx/(d || 1)*kb; f.vy = dy/(d || 1)*kb;
     spark(f.x, f.y - 14 - f.alt); ftext(f.x, f.y - 40 - f.alt, "−" + (Math.round(dmg*10)/10), "#FFE9A8");
@@ -4843,12 +4856,12 @@ function ctFin(){
   const f = alive().filter(f => f.st === "kneel" && Math.hypot(f.x - P.x, f.y - P.y) < 90).sort((a, b) => Math.hypot(a.x - P.x, a.y - P.y) - Math.hypot(b.x - P.x, b.y - P.y))[0];
   if (!f){ toast(alive().length ? "Đánh cho giặc yếu dưới 1/4 sức và khí thế đầy thì giặc quỳ xuống, mới kết liễu được." : "Không có ai để kết liễu.", "warn"); return; }
   P.atk = null; P.blk = null; P.roll = null; P.dir = dir8(f.x - P.x, f.y - P.y);
-  P.fin = {e:0, f, w:wpn(), done:false}; FSLOW = 0.5; KHI = 0;
+  P.fin = {e:0, f, w:wbase(), done:false}; FSLOW = 0.5; KHI = 0;
   FBAN = {txt:WPN[wpn()].fin, t:0, w:wpn()}; RLA.sfx("sukien");
 }
 function ctRoll(){
   if (!modal.hidden || switching || P.fin || P.roll || !inFight()) return;
-  if (!useSuc(1)) return;
+  if (voLv() < 2 && !useSuc(1)) return;
   let mx = 0, my = 0; for (const c of held){ const v = MOVE[c]; if (v){ mx += v[0]; my += v[1]; } }
   if (!mx && !my){ const v = FV[P.dir]; mx = v[0]; my = v[1]; }
   const l = Math.hypot(mx, my) || 1; P.atk = null; P.blk = null;
@@ -4860,8 +4873,8 @@ function hitPlayer(f){
   if (P.roll || P.fin) return;
   const d = Math.hypot(P.x - f.x, P.y - f.y) || 1;
   if (P.blk){
-    if (performance.now() - P.blk.t0 < 300){ f.st = "hurt"; f.tt = 0.9; f.vx = (f.x - P.x)/d*300; f.vy = (f.y - P.y)/d*300; P.blk.flash = 0.4; khiAdd(25); spark(f.x, f.y - 20 - f.alt); ftext(P.x, P.y - 92, "Đỡ đúng lúc!", "#F2C94C"); RLA.sfx("tap"); return; }
-    HPF -= Math.round(f.dmg*0.25); khiAdd(4); P.blk.flash = 0.2; RLA.sfx("tap");
+    if (performance.now() - P.blk.t0 < blkWin()){ f.st = "hurt"; f.tt = 0.9; f.vx = (f.x - P.x)/d*300; f.vy = (f.y - P.y)/d*300; P.blk.flash = 0.4; khiAdd(25); spark(f.x, f.y - 20 - f.alt); ftext(P.x, P.y - 92, "Đỡ đúng lúc!", "#F2C94C"); RLA.sfx("tap"); return; }
+    HPF -= Math.round(f.dmg*(S.goods.khien > 0 ? 0.1 : 0.25)); khiAdd(4); P.blk.flash = 0.2; RLA.sfx("tap");
   } else { HPF -= f.dmg; P.hurt = 0.45; tryMove(P, (P.x - f.x)/d*12, (P.y - f.y)/d*12); RLA.sfx("canhbao"); ftext(P.x, P.y - 88, "−" + f.dmg, "#FFB4A0"); }
   if (HPF <= 0) faintFight();
 }
@@ -5292,7 +5305,7 @@ showMap = function(){
   }
   if (WMAP[S.map]){ for (const m of ctMarks()){ const [ox, oy] = WMAP[S.map]; g.fillStyle = "#F2C94C"; g.beginPath(); g.arc(ox*s + m.x/T*s, oy*s + m.y/T*s, 5, 0, 7); g.fill(); } }
   NPCS.forEach(n => { if (n.hide || !WMAP[n.map] || !npcBeat(n.id) || !fogOn(n.map, n.x/T, n.y/T)) return; const [ox, oy] = WMAP[n.map]; g.fillStyle = "#F2C94C"; g.beginPath(); g.arc(ox*s + n.x/T*s, oy*s + n.y/T*s, 5, 0, 7); g.fill(); g.fillStyle = "#5A2E08"; g.font = "800 9px sans-serif"; g.fillText("!", ox*s + n.x/T*s, oy*s + n.y/T*s + 0.5); });
-  const [px, py] = S.map === "hang" ? [WMAP.nui[0] + 20, WMAP.nui[1] + 5] : [WMAP[S.map][0] + P.x/T, WMAP[S.map][1] + P.y/T];
+  const [px, py] = S.map.startsWith("in_") ? inWorld() : S.map === "hang" ? [WMAP.nui[0] + 20, WMAP.nui[1] + 5] : [WMAP[S.map][0] + P.x/T, WMAP[S.map][1] + P.y/T];
   g.fillStyle = "#B23A28"; g.strokeStyle = "#fff"; g.lineWidth = 3; g.beginPath(); g.arc(px*s, py*s, 7, 0, 7); g.stroke(); g.fill();
 };
 document.addEventListener("click", e => {
@@ -5310,9 +5323,1046 @@ document.addEventListener("click", e => {
   }
 });
 
+/* ===== Bản 15: thợ rèn binh khí và giáp, thầy bói, võ sư, bá hộ, bà mối, bé Cò ===== */
+const x15 = () => (S.x15 = S.x15 || {fc:null, que:0, xem:{}, bk:null, w:null, vo:{xp:0, d:0}, f:{}, vun:0});
+GOODS.kiemsat = {n:"Kiếm sắt", i:"🗡️", base:60, shop:true};
+GOODS.kiemthep = {n:"Kiếm thép trăm lần rèn", i:"⚔️", base:220, shop:true};
+GOODS.giapda = {n:"Giáp da trâu", i:"🦺", base:60, shop:true};
+GOODS.giapsat = {n:"Giáp vảy sắt", i:"🛡️", base:200, shop:true};
+GOODS.khien = {n:"Khiên mây", i:"🛡️", base:35, shop:true};
+GOODS.bua = {n:"Bùa hộ mệnh", i:"🧧", base:15, shop:true};
+WPN.kiemsat = {n:"Kiếm sắt", dmg:1.7, rng:42, arc:0.55, fin:"Phá trận", as:"kiem"};
+WPN.kiemthep = {n:"Kiếm thép", dmg:2.6, rng:44, arc:0.6, fin:"Long ngâm", as:"kiem"};
+const WORDER = ["kiemthep", "kiem", "kiemsat", "giao", "gay"];
+const WGOOD = {kiemthep:"kiemthep", kiem:"kiemco", kiemsat:"kiemsat", giao:"giao"};
+const wOwn = k => k === "gay" || S.goods[WGOOD[k]] > 0;
+wpn = () => { const X = x15(); return X.w && wOwn(X.w) ? X.w : WORDER.find(wOwn); };
+const wbase = () => WPN[wpn()].as || wpn();
+/* Đồ rèn ở lò bác Thiết: rèn qua đêm, sáng mai mang về */
+const FORGE = {
+  kiemsat:{need:{sat:3, than:2}, p:40, d:"Sát thương 1,7 (gậy tre 1, giáo 1,5). Chiêu kết liễu “Phá trận”."},
+  kiemthep:{need:{kiemsat:1, sat:5, than:4}, p:150, tim:3, d:"Thép gấp trăm lớp, sát thương 2,6. Chiêu kết liễu “Long ngâm”. Bác Thiết chỉ rèn cho người bác quý (3 tim)."},
+  giapda:{need:{sat:1, than:1}, p:50, d:"Da trâu thuộc kỹ, đinh tán sắt. Bớt 20% sát thương khi bị đánh."},
+  giapsat:{need:{giapda:1, sat:6, than:3}, p:160, d:"Vảy sắt kết trên nền da. Bớt 40% sát thương khi bị đánh."},
+  khien:{need:{sat:1}, p:30, d:"Khiên đan bằng mây. Giữ K đỡ đòn chỉ mất 10% (không khiên 25%), đỡ đúng lúc dễ hơn."}
+};
+const armorPct = () => S.goods.giapsat > 0 ? 0.4 : S.goods.giapda > 0 ? 0.2 : 0;
+const VOX = [0, 2, 5, 9, 14, 20];
+const voLv = () => { const xp = x15().vo.xp; let l = 0; while (l < 5 && xp >= VOX[l + 1]) l++; return l; };
+const voMul = () => 1 + 0.08*voLv();
+function blkWin(){ return 300 + (S.goods.khien > 0 ? 80 : 0) + (voLv() >= 3 ? 100 : 0); }
+function forgeAct(k){
+  const F = FORGE[k], X = x15(); if (!F || X.bk || !hasAll(F.need) || S.money < F.p || (F.tim && heartsOf("thiet") < F.tim)) return;
+  for (const g in F.need) S.goods[g] -= F.need[g];
+  S.money -= F.p; X.bk = {k, day:S.day + 1}; RLA.sfx("ban");
+  toast("Bác Thiết nhận rèn " + GOODS[k].n.toLowerCase() + ". Sáng mai bác cho người mang về tận nhà."); commit();
+}
+function forgeHtml(){
+  const X = x15();
+  const rows = Object.entries(FORGE).map(([k, F]) => {
+    const lock = F.tim && heartsOf("thiet") < F.tim, ok = !X.bk && !lock && hasAll(F.need) && S.money >= F.p;
+    return `<div class="row"><span class="e">${GOODS[k].i}</span><span class="t"><b>${GOODS[k].n}${S.goods[k] > 0 ? '<span class="pill">đã có ' + S.goods[k] + '</span>' : ""}</b><small>${F.d} Cần ${needTxt(F.need)}, tiền công ${F.p} đồng.${lock ? " Hiện bác Thiết mới " + heartsOf("thiet") + " tim." : ""}</small></span>
+      <span class="a"><button class="btn s p" data-act="x15" data-k="forge" data-g="${k}" ${ok ? "" : "disabled"}>Rèn · ${F.p}đ</button></span></div>`;
+  }).join("");
+  return `<div class="sec"><h3>Binh khí và giáp (bác Thiết)</h3>
+   ${X.bk ? `<div class="box" style="background:var(--bg)">Bác Thiết đang rèn <b>${GOODS[X.bk.k].n.toLowerCase()}</b>, sáng mai xong. Rèn binh khí mỗi lần một món.</div>` : `<p class="note">Rèn qua đêm. Quặng sắt và than lấy trong hang đá núi Thiên Thai (từ tầng 6). Vũ khí đang dùng: <b>${WPN[wpn()].n}</b>, đổi trong Túi đồ.</p>`}
+   <div class="rows">${rows}</div></div>`;
+}
+/* Dự báo của thầy bói: đoán trước sự kiện đêm mai, đêm đó trời đất làm đúng như quẻ */
+const FC_TXT = {none:"Trời quang mây tạnh, không có chuyện gì lạ.", mua:"Mưa rào, cả cánh đồng được tưới, khỏi phải ra giếng.", hoi:"Làng mở hội, hàng mang ra chợ bán thêm 20%.", han:"Nắng hạn. Thửa nào chưa tưới đến tối sẽ héo chết, nhớ tưới sớm.", chuot:"Chuột mò vào kho thóc." , cao:"Cáo rình chuồng gà.", chau:"Trưởng làng sẽ báo tin châu chấu sắp kéo đến.", lu:"Trưởng làng sẽ báo tin nước sông sắp lên."};
+function fcRoll(){
+  const d = S.day + 1, se = seasonOf(d);
+  if (S.warn && S.warn.day === d) return "warn";
+  if (d < 4 || Math.random() > (se === 3 ? 0.2 : 0.38)) return null;
+  const opts = [["mua", se === 3 ? 1 : 3], ["hoi", 0.6]];
+  if (se !== 3) opts.push(["han", se === 1 ? 2 : 1]);
+  if (!S.warn && (se === 1 || se === 2)){ opts.push(["chau", 1.5]); if (d > SL) opts.push(["lu", 1.2]); }
+  if (S.animals.some(a => a.t === "ga")) opts.push(["cao", 1]);
+  if ((S.goods.thoc||0) >= 3) opts.push(["chuot", 1]);
+  return pickW(opts);
+}
+function fcGet(){
+  const X = x15();
+  if (!X.fc || X.fc.for !== S.day + 1) X.fc = {for:S.day + 1, id:fcRoll()};
+  return X.fc;
+}
+const fcOk = id => id === "cao" ? S.animals.some(a => a.t === "ga") : id === "chuot" ? (S.goods.thoc||0) >= 3 : (id === "chau" || id === "lu") ? !S.warn : true;
+{
+  const re0 = rollEvent;
+  rollEvent = function(notes){
+    const X = x15(), fc = X.fc;
+    if (!fc || fc.for !== S.day || fc.id === "warn") return re0(notes);
+    X.fc = null;
+    if (!fc.id) return;
+    if (!fcOk(fc.id)){
+      const M = {chuot:"Đêm qua chuột mò vào kho, nhưng kho gần hết thóc nên chúng bỏ đi.", cao:"Đêm qua cáo lảng vảng quanh chuồng, nhưng chuồng chẳng còn con gà nào."};
+      if (M[fc.id]){ S.ev = {id:fc.id, msg:M[fc.id], k:"good"}; notes.push(["good", M[fc.id]]); }
+      return;
+    }
+    const mr = Math.random, pw = pickW; let first = true;
+    Math.random = () => first ? (first = false, 0) : mr(); pickW = () => fc.id;
+    try { re0(notes); } finally { Math.random = mr; pickW = pw; }
+  };
+}
+function fcText(){
+  const fc = fcGet(), C = ctS(), d = S.day + 1, L = [];
+  if (fc.id === "warn") L.push(S.warn.id === "chau" ? "Sáng mai châu chấu kéo đến như trưởng làng đã báo. Gặt hết lúa chín đi." : "Sáng mai nước sông lên như trưởng làng đã báo." + (S.up.de ? " Đê nhà anh vững, không lo." : " Chưa có đê thì gặt sớm."));
+  else L.push("Ngày mai (ngày " + dis(d) + "): " + FC_TXT[fc.id || "none"]);
+  if (isPhien(d)) L.push("Mai là chợ phiên, giá bán cao hơn 25%.");
+  if (S.warn && S.warn.day > d) L.push("Ngày " + dis(S.warn.day) + " có " + (S.warn.id === "chau" ? "châu chấu" : "nước lên") + ".");
+  if (C.ch === 0 && ctEl1()) L.push("Đêm nay trời nổi bão trên sông Cái. Có rồng con mắc cạn ở bãi cát, ai cứu thì đổi vận.");
+  return L;
+}
+/* Quẻ đầu ngày */
+const QUE15 = [["Đại cát", 20, "Hôm nay mọi việc hanh thông. Lộc trời cho thêm 3 sức."], ["Cát", 35, "Quẻ tốt. Làm gì cũng thuận, được thêm 1 sức."], ["Bình", 30, "Quẻ bình. Cứ làm ăn như mọi ngày."], ["Hung", 15, "Quẻ xấu. Hôm nay chớ xuống hang sâu. Muốn yên thì mua lá bùa hộ mệnh mà đeo."]];
+function queAct(){
+  const X = x15(); if (X.que === S.day || S.money < 5) return;
+  S.money -= 5; X.que = S.day;
+  const qk = pickW(QUE15.map(Q => [Q[0], Q[1]])), q = QUE15.find(Q => Q[0] === qk);
+  if (q[0] === "Đại cát") S.suc = Math.min(MAXS, S.suc + 3);
+  if (q[0] === "Cát") S.suc = Math.min(MAXS, S.suc + 1);
+  X.qk = q[0]; RLA.sfx(q[0] === "Hung" ? "canhbao" : "thang");
+  commit(); boiSay("Quẻ " + q[0] + ". " + q[2]);
+}
+function sceneH(head, steps, done){ SC = {L:steps.slice(), i:0, done, head}; scShow(); }
+function boiSay(t){ sceneH("Thầy bói Thông", [L_("boi", t)], () => openPanel("boi")); }
+function xemAct(k){
+  const X = x15(), C = ctS(), P0 = {troi:10, duyen:10, van:20}[k];
+  if (S.money < P0 || X.xem[k] === S.day) return;
+  S.money -= P0; X.xem[k] = S.day; RLA.sfx("mua");
+  if (k === "troi"){ commit(); sceneH("Thầy bói Thông", fcText().map(t => L_("boi", t)), () => openPanel("boi")); return; }
+  if (k === "duyen"){
+    const W = NPCS.filter(n => n.wife && S.talked[n.id]).sort((a, b) => relP(b.id) - relP(a.id)), L = [];
+    if (S.spouse){ const sp = NPCS.find(n => n.id === S.spouse); L.push("Anh đã có " + (sp ? sp.ten || sp.n : "vợ") + " bên cạnh. Vợ hiền là phúc lớn nhất của nhà nông."); }
+    else if (!W.length) L.push("Duyên của anh còn ở phía trước. Ra chợ, ra quán, ra hiệu thuốc mà làm quen.");
+    else {
+      const top = W[0]; L.push("Người để ý anh nhiều nhất bây giờ là " + top.n + " (" + heartsOf(top.id) + " tim).");
+      const K = (S.known && S.known[top.id]) || {}, g = top.love.find(x => !K[x] && GOODS[x]);
+      if (g){ S.known = S.known || {}; S.known[top.id] = K; K[g] = "love"; L.push("Quẻ nói " + (top.ten || top.n) + " thích nhất " + GOODS[g].n.toLowerCase() + ". Đã ghi vào sổ quà."); }
+      if (W[1]) L.push("Còn " + W[1].n + " cũng có lòng (" + heartsOf(W[1].id) + " tim).");
+    }
+    if (C.ch >= 2) L.push("Xa hơn nữa, phương bắc có quý nhân áo vàng đang kén người hiền. Duyên ấy chưa tới, nhưng sẽ tới.");
+    commit(); sceneH("Thầy bói Thông", L.map(t => L_("boi", t)), () => openPanel("boi")); return;
+  }
+  const next = ctTasks().find(x => !x.done), L = [];
+  if (C.ch === 0 && !ctEl1()) L.push("Vận anh còn đang gây dựng. Lo xong ruộng vườn, lập được nghiệp thì sẽ có người tìm đến.");
+  else if (next) L.push("Quẻ chỉ rằng: " + next.t.replace(/^Phụ: /, "") + ". " + next.d);
+  if (C.ch >= 1 && !hasM("boi")){ addM("boi"); L.push("Còn đây là lời sấm cho cậu bé nhà anh: ‘Rồng con lạc bến bùn, ngọc sáng chờ ngày rửa. Kẻ mặc áo tía bên sông là người đẩy rồng xuống nước.’"); }
+  else if (C.ch >= 1) L.push("Lời sấm vẫn thế: kẻ mặc áo tía bên sông là người đẩy rồng xuống nước.");
+  commit(); sceneH("Thầy bói Thông", L.map(t => L_("boi", t)), () => openPanel("boi"));
+}
+function vBoi(){
+  const X = x15(), done = k => X.xem[k] === S.day;
+  const row = (e, t, s, k, p) => `<div class="row"><span class="e">${e}</span><span class="t"><b>${t}</b><small>${s}</small></span><span class="a"><button class="btn s p" data-act="x15" data-k="${k}" ${!done(k.replace("xem_", "")) && S.money >= p ? "" : "disabled"}>${done(k.replace("xem_", "")) ? "Đã xem" : "Xem · " + p + "đ"}</button></span></div>`;
+  return `<h2>Thầy bói Thông</h2><p class="sub">Ngồi dưới gốc đa đầu chợ làng Dâu. Mắt thầy loà nhưng nghe tiếng bước chân là biết vận người.</p>
+   <div class="sec rows">
+    <div class="row"><span class="e">🎋</span><span class="t"><b>Xin quẻ đầu ngày</b><small>Mỗi ngày một quẻ. Quẻ tốt được thêm sức.${X.que === S.day ? " Hôm nay được quẻ " + esc(X.qk || "") + "." : ""}</small></span><span class="a"><button class="btn s p" data-act="x15" data-k="que" ${X.que !== S.day && S.money >= 5 ? "" : "disabled"}>${X.que === S.day ? "Đã xin" : "Xin · 5đ"}</button></span></div>
+    ${row("🌦️", "Xem thời tiết ngày mai", "Thầy nói trước mai mưa hay nắng, có hội, có chuột, có cáo. Nói trúng như in.", "xem_troi", 10)}
+    ${row("💞", "Xem đường tình duyên", "Biết ai đang để ý anh nhất, và món quà người ấy thích.", "xem_duyen", 10)}
+    ${row("📜", "Xem vận số, lời sấm", "Gợi ý việc nên làm tiếp trong truyện Ngọc trong bùn, kèm lời sấm.", "xem_van", 20)}
+    <div class="row"><span class="e">🧧</span><span class="t"><b>Bùa hộ mệnh</b><small>Đeo trong người. Lần sau bị đánh gục, bùa cháy thay mạng, anh đứng dậy đánh tiếp. Đang có ${S.goods.bua||0} lá.</small></span><span class="a"><button class="btn s" data-act="buyg" data-g="bua" data-n="1" data-p="15" ${S.money >= 15 ? "" : "disabled"}>Mua 1 · 15đ</button></span></div>
+   </div>`;
+}
+/* Võ đường của võ sư Đinh Hổ ở phủ */
+const VO_EFF = ["Chưa nhập môn.", "Đòn đánh mạnh thêm 8%, bị đánh bớt 5%.", "Né không tốn sức.", "Đỡ đúng lúc dễ hơn (thêm 0,1 giây).", "Đòn đánh mạnh thêm 32%, bị đánh bớt 20%.", "Võ sinh xuất sắc: đủ sức lên kinh thi võ."];
+function voAct(){
+  const X = x15(); if (X.vo.d === S.day || S.money < 10 || S.time >= 1080 || voLv() >= 5) return;
+  if (!useSuc(3)) return;
+  S.money -= 10; X.vo.d = S.day; const l0 = voLv(); X.vo.xp += heartsOf("ho") >= 3 ? 2 : 1; S.time += 60;
+  addRel("ho", 3, "Võ sư Đinh Hổ"); RLA.sfx("gat");
+  const l1 = voLv(); commit();
+  const TAU = ["Tấn trụ cho vững, gối không run thì đòn mới chắc.", "Đỡ là để đánh. Đỡ đúng lúc thì địch mất thế.", "Né sang ngang, đừng lùi thẳng. Lùi thẳng là chết.", "Đánh ba đòn liền, đòn cuối dồn hết sức vai.", "Người học võ trước hết phải học nhẫn."];
+  sceneH("Võ đường Đinh Hổ", [K_("Anh tập một canh giờ ở võ đường, mồ hôi ướt đẫm áo."), L_("ho", TAU[X.vo.xp % TAU.length])].concat(l1 > l0 ? [L_("ho", "Khá lắm! Anh lên bậc " + l1 + ". " + VO_EFF[l1])] : []), () => openPanel("vo"));
+}
+function vVo(){
+  const X = x15(), l = voLv(), nx = VOX[l + 1];
+  return `<h2>Võ đường Đinh Hổ</h2><p class="sub">Sân đất nện sau dãy nhà phố huyện. Võ sư Đinh Hổ dạy côn, giáo, kiếm cho trai tráng trong phủ.</p>
+   <div class="box" style="background:var(--bg)"><b>Bậc võ: ${l}/5</b> · ${esc(VO_EFF[l])}${nx ? `<br><small class="note">Đã tập ${X.vo.xp}/${nx} buổi để lên bậc ${l + 1}.</small>` : ""}</div>
+   <div class="sec rows"><div class="row"><span class="e">🥋</span><span class="t"><b>Tập võ một canh giờ</b><small>Tốn 3 sức, 10 đồng học phí, mỗi ngày một buổi, trước 18 giờ. Võ sư quý anh (3 tim) thì một buổi bằng hai.</small></span>
+    <span class="a"><button class="btn s p" data-act="x15" data-k="vo" ${X.vo.d !== S.day && S.money >= 10 && S.suc >= 3 && S.time < 1080 && l < 5 ? "" : "disabled"}>${l >= 5 ? "Đã thành tài" : X.vo.d === S.day ? "Mai tập tiếp" : "Tập · 10đ"}</button></span></div></div>
+   <ul class="notes sec">${VO_EFF.slice(1).map((t, i) => `<li class="${l > i ? "good" : ""}"><span>Bậc ${i + 1}: ${esc(t)}</span></li>`).join("")}</ul>`;
+}
+/* Bà mối Tư: dò lòng các cô, nói vun, bán mâm trầu cau */
+function vunAct(id){
+  const X = x15(), n = NPCS.find(x => x.id === id); if (!n || X.vun === S.day || S.money < 25 || !S.talked[id]) return;
+  S.money -= 25; X.vun = S.day; addRel(id, 8, n.n); RLA.sfx("mua"); commit();
+  sceneH("Bà mối Tư", [L_("moi", "Được, để bà sang nhà " + (n.ten || n.n) + " nói vun cho. Cái miệng bà Tư này đã nói thì đâu ra đấy."), K_((n.ten || n.n) + " thêm 8 tình cảm.")], () => openPanel("moi"));
+}
+function vMoi(){
+  const X = x15(), W = NPCS.filter(n => n.wife);
+  const rows = W.map(n => {
+    const met = S.talked[n.id], h = heartsOf(n.id), st = S.spouse === n.id ? "vợ anh" : S.lover === n.id ? "đang thương anh" : h >= 5 ? "có lòng với anh" : met ? "mới quen" : "chưa gặp";
+    const K = (S.known && S.known[n.id]) || {}, lv = n.love.filter(g => K[g] && GOODS[g]).map(g => GOODS[g].n.toLowerCase());
+    return `<div class="row"><span class="e">💐</span><span class="t"><b>${esc(n.n)} <span class="pill">${st}</span></b><small>${met ? h + " tim · " + esc(n.where) + (lv.length ? " · thích nhất " + esc(lv.join(", ")) : " · chưa biết thích gì nhất") : "Ở " + esc(n.where) + ". Anh tới làm quen trước đã."}</small></span>
+      <span class="a">${met && !S.spouse ? `<button class="btn s" data-act="x15" data-k="vun" data-g="${n.id}" ${X.vun !== S.day && S.money >= 25 ? "" : "disabled"}>Nói vun · 25đ</button>` : ""}</span></div>`;
+  }).join("");
+  return `<h2>Bà mối Tư</h2><p class="sub">Bà mối có tiếng nhất làng Dâu, se duyên cho bao nhiêu đôi. Mỗi ngày bà chỉ đi nói vun một nhà.</p>
+   <div class="sec rows">${rows}</div>
+   <div class="sec rows"><div class="row"><span class="e">${RLA.art("traucau")}</span><span class="t"><b>Mâm trầu cau</b><small>Lễ vật để cầu hôn (cần 8 tim). Đang có ${S.goods.traucau||0} mâm.</small></span><span class="a"><button class="btn s p" data-act="buyg" data-g="traucau" data-n="1" data-p="40" ${S.money >= 40 ? "" : "disabled"}>Mua · 40đ</button></span></div></div>
+   ${ctS().ch >= 2 ? `<p class="note sec">Bà Tư thì thầm: “Nghe đâu trên kinh, công chúa Thụy Liên sắp kén phò mã. Đã có vợ rồi cũng chẳng sao, miễn tài đức hơn người.”</p>` : ""}`;
+}
+Object.assign(PANELS, {boi:vBoi, vo:vVo, moi:vMoi});
+/* Người mới */
+const BOI_LOOK = {ao:"#5A4A6E", quan:"#2A2420", hat:"khan", toc:"#ECE8DE"};
+const LE_LOOK = {ao:"#7A2E3A", quan:"#2A2420", hat:"khan", dai:"#E3B53C", toc:"#6A645A"};
+const HO_LOOK = {ao:"#2E2A26", quan:"#7A2E22", hat:"khan", dai:"#B23A28", toc:"#1E1A16"};
+const CO_LOOK = {ao:"#8A7A62", quan:"#5A4A3A", hat:"toc", nho:true, toc:"#2A241E"};
+const MOI_LOOK = {ao:"#A0466A", quan:"#2A2420", hat:"khan", vay:true, toc:"#8A847A"};
+{
+  const mk = n => { Object.assign(n, {x:n.hx*T, y:n.hy*T, tx:n.hx*T, ty:n.hy*T, wait:2, dir:2, ph:0, mv:false, li:-1, pi:0, pd:1, emo:null}); n.id0 = {map:n.map, hx:n.hx, hy:n.hy, r:n.r, where:n.where, home:n.home, panel:n.panel}; NPCS.push(n); };
+  mk({id:"boi", n:"Thầy bói Thông", map:"lang", home:"cho", where:"gốc đa đầu chợ", hx:22.4, hy:21.6, r:0, look:BOI_LOOK, bgc:"#D6CCE2", panel:"boi", plab:"Xem quẻ",
+    love:["ruounep"], like:["banh","trung"], hate:["rau"],
+    hi:"Bước chân nặng, tay chai sạn... anh là người làm ruộng ở xóm Bãi. Lão là Thông, xem quẻ dưới gốc đa này đã bốn chục năm.",
+    lines:[["Trời có lúc mưa lúc nắng, người có lúc thịnh lúc suy.", "Lão mù mắt chứ không mù lòng."],
+           ["Vận anh đang lên, cứ giữ lòng ngay.", "Đêm qua lão nghe tiếng rồng ngâm dưới sông Cái."],
+           ["Anh là người có phúc, lão xem quẻ cho anh không lấy tiền cũng được.", "Lão sống đủ lâu để biết ai là người tốt."]],
+    tips:() => ["Xem thời tiết thì lão nói trúng ngày mai, chẳng sai bao giờ.", "Gặp quẻ hung thì mua lá bùa mà đeo, xuống hang đỡ lo.", "Rượu nếp cái hoa vàng là thứ lão thích nhất đời."]});
+  mk({id:"le", n:"Bá hộ Lê", map:"lang", home:"vuon", where:"trước vườn cam", hx:16.6, hy:11.2, r:1.2, look:LE_LOOK, bgc:"#E6C8C4",
+    love:["kimcuongm","tramngoc"], like:["cam","ruounep","trung"], hate:["rom"],
+    hi:"Ta là Lê, bá hộ làng Dâu. Vườn cam Canh kia là của nhà ta. Anh là người mới về xóm Bãi đấy à?",
+    lines:[["Của làm ra phải biết giữ. Tiêu thì dễ, kiếm thì khó.", "Cam nhà ta ngọt nhất xứ Kinh Bắc."],
+           ["Anh làm ăn chí thú, ta để ý rồi.", "Làng này nhiều kẻ ăn không ngồi rồi, anh thì khác."],
+           ["Có cần vốn làm ăn thì cứ tìm ta, chỗ quen ta tính lãi nhẹ.", "Anh là người ta tin nhất làng này."]],
+    tips:() => ["Đừng hái trộm cam vườn ta. Lính tuần mà bắt được là đi tù đấy.", "Dạo này Cả Lợi thu thóc của dân nhiều hơn lệ, chẳng biết nộp cho ai.", "Tiền để trong hũ thì không đẻ ra tiền. Phải biết cho vay, biết góp hụi."]});
+  mk({id:"moi", n:"Bà mối Tư", map:"lang", home:"cho", where:"đầu dãy hàng chợ", hx:40.4, hy:22.6, r:1, look:MOI_LOOK, bgc:"#EDC8D8", panel:"moi", plab:"Nhờ bà mối",
+    love:["traucau","ruounep"], like:["banh","cam"], hate:["rom"],
+    hi:"Ôi giời, chàng trai xóm Bãi đây rồi! Bà là Tư, bà mối của cả làng. Có ưng cô nào thì bảo bà.",
+    lines:[["Lấy vợ xem tông, lấy chồng xem giống.", "Thắm quán nước, Đào nuôi tằm, Ngọc nhà thầy lang, cô nào cũng nết na."],
+           ["Anh chịu khó thế này, cô nào lấy được là có phúc.", "Bà mà nói vun thì mười đám thành chín."],
+           ["Anh như con cháu trong nhà, bà lo cho anh chu đáo.", "Mai mốt anh cưới, bà ngồi mâm trên đấy nhé."]],
+    tips:() => ["Muốn cầu hôn thì phải 8 tim và một mâm trầu cau. Bà có bán.", "Tỏ tình trước đã, được 5 tim là tỏ được.", ctS().ch >= 2 ? "Nghe nói công chúa Thụy Liên trên kinh kén phò mã, có vợ rồi vẫn được dự." : "Con gái làng này thích người chăm chỉ, ruộng nhiều."]});
+  mk({id:"ho", n:"Võ sư Đinh Hổ", map:"tran", home:"tro", where:"võ đường phố huyện", hx:24.6, hy:31.4, r:1.4, look:HO_LOOK, bgc:"#E2C0B0", panel:"vo", plab:"Vào võ đường",
+    love:["ruounep","ca"], like:["banh","trung","khoai"], hate:["rau"],
+    hi:"Ta là Đinh Hổ, mở võ đường ở phủ này. Trai thời loạn mà không biết võ thì lấy gì giữ nhà, giữ nước?",
+    lines:[["Văn ôn võ luyện. Một ngày không tập là tay chân cứng lại.", "Giặc Nguyên mà sang thì võ sinh của ta ra trận trước."],
+           ["Anh có khiếu đấy, chịu khó tập.", "Cầm kiếm phải cầm bằng cả tấm lòng."],
+           ["Anh là học trò ta quý nhất.", "Mai mốt anh lên kinh thi võ, nhớ nói là học trò Đinh Hổ."]],
+    tips:() => ["Giữ K là đỡ, đỡ đúng lúc giặc vừa lao tới thì hất ngược nó.", "Bác Thiết rèn được kiếm sắt, giáp da. Có giáp thì bị đánh đỡ đau hơn.", "Tập đủ năm bậc thì lên kinh thi võ được."]});
+  mk({id:"co", n:"Bé Cò ăn mày", map:"tran", home:"tro", where:"trước quán trọ", hx:39.2, hy:28.6, r:1.6, look:CO_LOOK, bgc:"#DCD2C0",
+    love:["banh"], like:["khoai","cam","ca"], hate:["rom"],
+    hi:"Anh ơi, cho em xin miếng gì ăn với... Em là Cò, ngủ ở hiên quán trọ này.",
+    lines:[["Em đói lắm anh ạ.", "Em ngồi đây cả ngày, ai ra ai vào quán trọ em đều biết."],
+           ["Anh tốt thật, chưa ai cho em bánh bao giờ.", "Lính tuần hay đuổi em, nhưng em chạy nhanh lắm."],
+           ["Anh cần dò la gì cứ bảo em.", "Lớn lên em muốn theo anh làm ruộng."]],
+    tips:() => ["Em thích bánh giầy nhất. Khoai, cam, cá em cũng thích.", "Đêm đêm có người lạ giọng kinh ở quán trọ, hay hỏi đường ra sông.", "Ai cho em ăn, em nhớ ơn cả đời."]});
+}
+/* Điểm truyện của người mới */
+function leScene(){
+  scene([
+    L_("le", "Anh vào đây ta nói chuyện riêng. Ta biết nhà anh đang nuôi một cậu bé lạ."),
+    L_("le", "Đừng sợ, ta không báo quan. Ta chỉ muốn anh biết: Cả Lợi thu thóc của dân quá lệ, rồi đêm đêm chở ra bến sông bán cho thuyền lạ."),
+    L_("le", "Có lần ta thấy hắn nhận một túi bạc của gã giọng kinh, đeo dao găm chuôi bạc. Anh cẩn thận. Có việc cần người làm chứng, ta sẽ đứng ra."),
+    F_(() => { addM("le"); x15().f.le = 1; addRel("le", 5, "Bá hộ Lê"); })
+  ]);
+}
+function coScene(){
+  scene([
+    L_("co", "Anh ơi, em kể anh nghe chuyện này, anh đừng nói ai nhé."),
+    L_("co", "Đêm hôm kia em nằm ở hiên quán trọ, thấy Cả Lợi ngồi uống rượu với một gã đeo dao găm chuôi bạc."),
+    L_("co", "Gã ấy bảo: ‘Thằng bé mà còn sống thì cả bọn mất đầu. Lục soát các xóm ven sông cho kỹ.’"),
+    K_("Anh lạnh người. Bọn chúng vẫn đang tìm Quang."),
+    F_(() => { addM("co"); x15().f.co = 1; })
+  ]);
+}
+function coScene2(){
+  scene([
+    L_("co", "Anh ơi, em bám theo cái thuyền cờ đen anh dặn rồi. Em trốn dưới đống bao thóc, đi suốt hai ngày."),
+    L_("co", "Thuyền xuôi về kinh, cập bến Đông Bộ Đầu. Thóc khuân vào một phủ lớn, cổng treo biển ‘Nghĩa Lăng hầu phủ’."),
+    L_("co", "Em nhớ mặt từng đứa. Có ngày anh cần người làm chứng, em đi với anh."),
+    F_(() => { x15().f.co2 = 1; addRel("co", 5, "Bé Cò"); })
+  ]);
+}
+function boiScene0(){
+  scene([
+    L_("boi", "Anh kia, dừng chân đã. Lão nghe trong gió có mùi bão."),
+    L_("boi", "Đêm nay sông Cái nổi sóng. Có rồng con mắc cạn trên bãi cát nhà anh. Cứu thì vận anh đổi, mà hoạ cũng theo về."),
+    L_("boi", "Đi đi. Lão chỉ nói đến thế."),
+    F_(() => { x15().f.boi0 = 1; })
+  ]);
+}
+{
+  const nb0 = npcBeat;
+  npcBeat = function(id){
+    const C = ctS(), f = C.f, X = x15();
+    if (id === "boi" && C.ch === 0 && ctEl1() && !X.f.boi0) return boiScene0;
+    if (id === "le" && C.ch >= 1 && f.sang && !hasM("le") && heartsOf("le") >= 3) return leScene;
+    if (id === "co" && C.ch >= 1 && f.sang && !hasM("co") && heartsOf("co") >= 2) return coScene;
+    if (id === "co" && C.ch >= 2 && hasM("co") && hasM("codo") && !X.f.co2) return coScene2;
+    return nb0(id);
+  };
+  MANH.boi = ["Lời sấm thầy bói Thông", () => "“Rồng con lạc bến bùn, ngọc sáng chờ ngày rửa. Kẻ mặc áo tía bên sông là người đẩy rồng xuống nước.”"];
+  MANH.le = ["Lời bá hộ Lê", () => "Cả Lợi thu thóc quá lệ, đêm đêm bán cho thuyền lạ, nhận bạc của gã giọng kinh đeo dao găm chuôi bạc. Bá hộ hứa làm chứng."];
+  MANH.co = ["Bé Cò nghe trộm ở quán trọ", () => x15().f.co2 ? "Cả Lợi và gã dao găm đang lùng Quang. Bé Cò theo thuyền cờ đen về kinh: thóc chở vào phủ Nghĩa Lăng hầu." : "Cả Lợi và gã đeo dao găm chuôi bạc đang lục soát xóm ven sông tìm Quang."];
+  const ct0 = ctTasks;
+  ctTasks = function(){
+    const L = ct0(), C = ctS(), X = x15();
+    if (C.ch === 1 || C.ch === 2){
+      L.push({t:"Phụ: bá hộ Lê biết chuyện gì?", d:"Bá hộ đứng trước vườn cam làng Dâu. Kết thân 3 tim thì ông kể (hiện " + heartsOf("le") + " tim).", done:hasM("le"), go:"npc:le"});
+      L.push({t:"Phụ: bé Cò ở quán trọ phủ", d:"Cho bé Cò ăn, được 2 tim thì Cò kể chuyện nghe trộm (hiện " + heartsOf("co") + " tim).", done:hasM("co"), go:"npc:co"});
+    }
+    if (C.ch === 2 && hasM("codo")) L.push({t:"Phụ: nhờ bé Cò theo thuyền cờ đen", d:"Có manh mối thuyền cờ đen và lời bé Cò thì hỏi lại Cò.", done:!!X.f.co2, go:"npc:co"});
+    return L;
+  };
+}
+/* Đeo giáp, học võ: bớt sát thương; bùa hộ mệnh cứu một lần */
+{
+  const hp0 = hitPlayer;
+  hitPlayer = function(f){
+    const d0 = f.dmg; f.dmg = Math.max(1, Math.round(d0*(1 - armorPct())*(1 - 0.05*Math.min(4, voLv()))));
+    try { hp0(f); } finally { f.dmg = d0; }
+  };
+  const ff0 = faintFight;
+  faintFight = function(){
+    if (S.goods.bua > 0){ S.goods.bua--; HPF = 45; P.hurt = 0.8; ftext(P.x, P.y - 96, "Bùa hộ mệnh cháy!", "#F2C94C", true); smoke(P.x, P.y - 40); RLA.sfx("thang"); toast("Lá bùa hộ mệnh cháy thành tro, anh gượng đứng dậy được. Còn " + S.goods.bua + " lá."); save(); return; }
+    ff0();
+  };
+  const nr0 = nightRen;
+  nightRen = function(notes){
+    nr0(notes);
+    const X = x15();
+    if (X.bk && S.day >= X.bk.day){ const k = X.bk.k; S.goods[k] = (S.goods[k]||0) + 1; X.bk = null; if (WPN[k]) X.w = k; notes.push(["good", "Bác Thiết rèn xong " + GOODS[k].n.toLowerCase() + ", cho người mang về tận nhà." + (WPN[k] ? " Anh đeo ngay bên mình." : "")]); }
+  };
+  const pl0 = PANELS.loren;
+  PANELS.loren = () => { const h = pl0(), i = h.indexOf('<div class="sec"><h3>Mài ngọc'); return i < 0 ? h + forgeHtml() : h.slice(0, i) + forgeHtml() + h.slice(i); };
+  const pt0 = PANELS.tui;
+  PANELS.tui = () => {
+    const X = x15(), own = WORDER.filter(wOwn), cur = wpn();
+    const ws = own.map(k => `<button class="btn s ${k === cur ? "p" : ""}" data-act="x15" data-k="wsel" data-g="${k}">${esc(WPN[k].n)}</button>`).join(" ");
+    const gp = armorPct();
+    return pt0() + `<div class="sec"><h3>Binh khí, giáp, võ</h3><p class="note">Chọn vũ khí mang theo: ${ws}</p><p class="note">Giáp: ${gp ? (S.goods.giapsat > 0 ? "giáp vảy sắt" : "giáp da trâu") + ", bớt " + Math.round(gp*100) + "% sát thương" : "chưa có"}${S.goods.khien > 0 ? " · có khiên mây" : ""}${S.goods.bua > 0 ? " · " + S.goods.bua + " lá bùa hộ mệnh" : ""} · bậc võ ${voLv()}/5 (võ đường Đinh Hổ ở phủ).</p></div>`;
+  };
+}
+function x15Act(k, d){
+  const X = x15();
+  if (k === "forge") forgeAct(d.g);
+  else if (k === "que") queAct();
+  else if (k.startsWith("xem_")) xemAct(k.slice(4));
+  else if (k === "vo") voAct();
+  else if (k === "vun") vunAct(d.g);
+  else if (k === "wsel"){ if (wOwn(d.g)){ X.w = d.g; toast("Mang theo " + WPN[d.g].n.toLowerCase() + ". Chiêu kết liễu “" + WPN[d.g].fin + "”."); commit(); } }
+}
+function showNew15(){
+  S.seen15 = true; save();
+  openModal(`<h2>Bản 15 có gì mới</h2><ul class="notes">
+   <li class="good">Bác Thiết ở phường đúc phủ Thiên Đức nay rèn binh khí và giáp: kiếm sắt, kiếm thép trăm lần rèn, giáp da trâu, giáp vảy sắt, khiên mây. Rèn qua đêm, sáng mai mang về. Đổi vũ khí trong Túi đồ.</li>
+   <li class="good">Thầy bói Thông dưới gốc đa đầu chợ làng Dâu: xin quẻ đầu ngày (quẻ tốt được thêm sức), xem thời tiết ngày mai (nói trúng như in), xem đường tình duyên, xem vận số và lời sấm cho truyện. Có bán bùa hộ mệnh: bị đánh gục thì bùa cháy thay mạng.</li>
+   <li class="good">Võ sư Đinh Hổ mở võ đường ở phố huyện: tập mỗi ngày một buổi, lên 5 bậc võ, đánh mạnh hơn, chịu đòn tốt hơn, né không tốn sức.</li>
+   <li class="good">Bà mối Tư ở chợ làng: dò lòng các cô, nói vun thêm tình cảm, bán mâm trầu cau.</li>
+   <li class="good">Bá hộ Lê trước vườn cam và bé Cò ăn mày ở quán trọ phủ: kết thân thì họ kể manh mối mới về Cả Lợi và thuyền cờ đen, sau này còn làm chứng trong truyện.</li></ul>
+   <div class="acts"><button class="btn p" data-act="close">Ra đồng</button></div>`);
+}
+/* Sân võ đường, chiếu thầy bói vẽ dưới chân người */
+MAPS.tran.labels.push(["Võ đường", 24.6, 33.7]);
+{
+  const dx0 = drawExtra11;
+  drawExtra11 = function(sp, t){
+    dx0(sp, t);
+    if (S.map === "tran") sp.push([-1e9, () => {
+      const x = 22.4*T, y = 29.8*T, w = 4.6*T, h = 3.4*T;
+      cx.fillStyle = "#C9AE7E"; cx.fillRect(x, y, w, h); cx.strokeStyle = "#8A6E44"; cx.lineWidth = 3; cx.strokeRect(x + 1.5, y + 1.5, w - 3, h - 3);
+      cx.fillStyle = "#6E4823"; cx.fillRect(x + 8, y + 10, 4, 34); cx.fillRect(x + 40, y + 10, 4, 34); cx.fillRect(x + 6, y + 16, 40, 4); cx.fillRect(x + 6, y + 34, 40, 4);
+      for (let k = 0; k < 3; k++){ const sx = x + 16 + k*9; cx.fillStyle = "#8A6A3A"; cx.fillRect(sx, y + 2, 2.5, 44); cx.fillStyle = "#D9DDE2"; cx.beginPath(); cx.moveTo(sx + 1.2, y - 6); cx.lineTo(sx - 2, y + 4); cx.lineTo(sx + 4.5, y + 4); cx.fill(); }
+      for (const [ox, oy] of [[w - 22, 16], [w - 22, h - 24]]){ cx.fillStyle = "#7A5230"; cx.fillRect(x + ox, y + oy, 9, 18); cx.fillStyle = "#5A3A20"; cx.fillRect(x + ox - 3, y + oy + 4, 15, 3); }
+    }]);
+    if (S.map === "lang"){ const n = NPCS.find(q => q.id === "boi"); if (n && npcVisible(n)) sp.push([-1e9, () => {
+      const x = n.hx*T, y = n.hy*T; cx.fillStyle = "#C9A24E"; cx.fillRect(x - 22, y - 6, 44, 14); cx.fillStyle = "#A07F33"; for (let k = 0; k < 5; k++) cx.fillRect(x - 22, y - 4 + k*3, 44, 1);
+      cx.fillStyle = "#6E4823"; cx.fillRect(x + 26, y - 40, 3, 44); cx.fillStyle = "#EFE4C8"; cx.fillRect(x + 18, y - 44, 22, 26); cx.fillStyle = "#B23A28"; cx.font = "700 11px serif"; cx.textAlign = "center"; cx.fillText("卜", x + 29, y - 27);
+    }]); }
+  };
+}
+
+/* ===== Bản 16: cho vay tiền góp, góp hụi, sổ nợ, chợ trời ===== */
+const x16 = () => { S.x16 = S.x16 || {}; const X = S.x16; X.loans = X.loans || []; X.req = X.req || []; X.done = X.done || []; X.lai = X.lai || 0; X.hh = X.hh || []; return X; };
+const nN = id => { const n = NPCS.find(x => x.id === id); return n ? n.n : id; };
+/* ---------- Cho vay tiền góp ---------- */
+const LOANER = {
+  ti:[0.95, 30, 60, "Mẹ em ốm, anh cho em vay ít tiền bốc thuốc, em chăn trâu thuê trả dần."],
+  huong:[0.95, 80, 200, "Bà cần ít vốn nhập hàng cho phiên chợ tới, góp trả mỗi ngày."],
+  chu:[0.9, 60, 150, "Ta muốn khắc ván in sách cho học trò, còn thiếu ít tiền."],
+  tham:[0.9, 60, 180, "Mái quán em dột rồi, anh cho em vay sửa lại nhé."],
+  dao:[0.9, 50, 150, "Em muốn mua thêm nong nia nuôi tằm lứa mới."],
+  ba:[0.92, 80, 220, "Ông cần mua gỗ lim đóng đồ cho phủ, tiền công trả sau."],
+  van:[0.8, 150, 400, "Tôi cần ứng vốn buôn một chuyến hàng về kinh. Lời to, trả đủ."],
+  tue:[0.95, 60, 160, "Lão cần mua mấy vị thuốc quý từ phương Bắc."],
+  ngoc:[0.95, 40, 120, "Em muốn mua cối giã thuốc mới cho hiệu."],
+  khot:[0.85, 50, 140, "Thuyền lão thủng một lỗ, cần tiền vá thuyền."],
+  co:[0.7, 20, 40, "Anh cho em vay mua cái áo rét, em đi đánh giày... à, đi gánh thuê trả anh."],
+  boi:[0.85, 30, 80, "Lão muốn sắm lại bộ thẻ quẻ, bộ cũ mòn hết rồi."],
+  ho:[0.9, 80, 200, "Võ đường cần mua thêm côn, giáo cho học trò."],
+  moi:[0.88, 50, 150, "Bà lo đám cưới cho đứa cháu, còn hụt ít tiền."]
+};
+const RATES = [[0.1, "nhẹ"], [0.2, "vừa"], [0.4, "nặng"]];
+const TERM = 10;
+const loanLeft = L => L.tot - L.paid;
+function genReq(notes){
+  const X = x16(), C = ctS();
+  X.req = X.req.filter(r => r.until >= S.day);
+  if (C.ch >= 1 && C.f.sang && !X.cl && !X.req.some(r => r.who === "linh1") && S.money >= 200){
+    X.cl = 1; X.req.push({who:"linh1", amt:200, until:S.day + 2, why:"Cho tao vay 200 đồng lo việc quan trên. Ít bữa nữa có bạc ở kinh gửi về, tao trả cả gốc lẫn lãi."});
+    notes.push(["bad", "Lính tuần Cả Lợi ghé nhà hỏi vay 200 đồng. Mở Sổ nợ để trả lời."]); return;
+  }
+  if (S.day < 3 || X.loans.filter(L => L.st === "dang").length >= 6 || X.req.length >= 3 || Math.random() > 0.4) return;
+  const ids = Object.keys(LOANER).filter(id => S.talked[id] && id !== S.spouse && !X.loans.some(L => L.who === id && L.st === "dang") && !X.req.some(r => r.who === id));
+  if (!ids.length) return;
+  const id = ids[Math.floor(Math.random()*ids.length)], D = LOANER[id];
+  const amt = Math.round((D[1] + Math.random()*(D[2] - D[1]))/10)*10;
+  X.req.push({who:id, amt, until:S.day + 2, why:D[3]});
+  notes.push(["good", nN(id) + " sang hỏi vay " + amt + " đồng, hẹn góp trả trong " + TERM + " ngày. Mở Sổ nợ để trả lời."]);
+}
+function lend(i, ri){
+  const X = x16(), r = X.req[i]; if (!r || S.money < r.amt) return;
+  const rate = RATES[ri][0], tot = Math.round(r.amt*(1 + rate));
+  S.money -= r.amt; X.req.splice(i, 1);
+  const L = {who:r.who, amt:r.amt, rate, tot, paid:0, per:Math.ceil(tot/TERM), start:S.day, miss:0, st:"dang", dn:0};
+  X.loans.push(L); RLA.sfx("mua");
+  if (r.who === "linh1"){ commit(); scene([L_("linh1", "Khá lắm. Điểm chỉ vào giấy đây. Bạc quan trên gửi về thì tao trả."), K_("Anh cất tờ giấy nợ có dấu điểm chỉ của Cả Lợi vào rương.")]); return; }
+  addRel(r.who, {0.1:6, 0.2:2, 0.4:-4}[rate], nN(r.who));
+  toast("Cho " + nN(r.who) + " vay " + r.amt + " đồng, lãi " + RATES[ri][1] + " " + Math.round(rate*100) + "%. Mỗi ngày góp " + L.per + " đồng."); commit();
+}
+function refuse(i){
+  const X = x16(), r = X.req[i]; if (!r) return;
+  X.req.splice(i, 1); if (r.who !== "linh1") addRel(r.who, -1, nN(r.who));
+  toast("Anh khéo từ chối " + nN(r.who) + "."); commit();
+}
+function nightLoans(notes){
+  const X = x16(); let got = 0, n = 0;
+  for (const L of X.loans){
+    if (L.st !== "dang" || L.start === S.day) continue;
+    if (L.who === "linh1"){ L.miss++; if (L.miss === 3) notes.push(["bad", "Cả Lợi vẫn chưa góp đồng nào. Hắn bảo “bạc ở kinh chưa về”."]); continue; }
+    const p = (LOANER[L.who] ? LOANER[L.who][0] : 0.85) + 0.012*heartsOf(L.who) - (L.rate >= 0.4 ? 0.18 : L.rate >= 0.2 ? 0.05 : 0);
+    if (Math.random() < p){
+      const d = Math.min(L.per, loanLeft(L)); L.paid += d; got += d; n++; L.miss = 0;
+      if (L.rate <= 0.1) addRel(L.who, 1, nN(L.who));
+      if (loanLeft(L) <= 0) loanEnd(L, "xong", notes);
+    } else {
+      L.miss++;
+      if (L.miss >= 6) loanEnd(L, "xu", notes);
+      else if (L.miss === 3) notes.push(["bad", nN(L.who) + " đã trễ góp 3 ngày. Mở Sổ nợ để đòi."]);
+    }
+  }
+  if (got){ S.money += got; notes.push(["good", n + " người góp nợ đêm qua, thu về " + got + " đồng."]); }
+}
+function loanEnd(L, st, notes){
+  const X = x16(); L.st = st; L.end = S.day;
+  if (st === "xong"){ X.lai += L.tot - L.amt; notes && notes.push(["good", nN(L.who) + " trả đủ nợ, cả gốc lẫn lãi " + L.tot + " đồng." + (L.rate <= 0.1 ? " Người ta nhớ ơn anh cho vay lãi nhẹ." : "")]); }
+  else { addRel(L.who, -10, nN(L.who)); notes && notes.push(["bad", nN(L.who) + " xù nợ, mất " + loanLeft(L) + " đồng chưa trả."]); }
+  X.done.unshift(L); X.done = X.done.slice(0, 12); X.loans = X.loans.filter(x => x !== L);
+}
+function dunLoan(i){
+  const X = x16(), L = X.loans[i]; if (!L || L.st !== "dang" || L.dn === S.day || !L.miss) return;
+  if (!useSuc(1)) return;
+  L.dn = S.day;
+  if (L.who === "linh1"){
+    addM("giayno"); commit();
+    scene([L_("linh1", "Đòi cái gì mà đòi! Bạc quan trên ở kinh chưa gửi về. Mày mà làm ầm lên thì cẩn thận cái đầu."), K_("Cả Lợi trợn mắt bỏ đi. Tờ giấy nợ điểm chỉ, hứa trả bằng bạc của “quan trên ở kinh”, là một bằng chứng."), F_(() => {})]);
+    return;
+  }
+  const due = Math.min(L.miss*L.per, loanLeft(L)), ok = Math.random() < 0.55 + 0.05*heartsOf(L.who) - (L.rate >= 0.4 ? 0.15 : 0);
+  addRel(L.who, L.rate >= 0.4 ? -4 : -2, nN(L.who));
+  if (ok){ L.paid += due; S.money += due; L.miss = 0; RLA.sfx("mua"); toast(nN(L.who) + " trả " + due + " đồng tiền góp còn khất."); if (loanLeft(L) <= 0){ const nt = []; loanEnd(L, "xong", nt); if (nt[0]) toast(nt[0][1]); } }
+  else { L.miss = Math.max(1, L.miss - 1); toast(nN(L.who) + " xin khất thêm vài hôm, hứa sẽ góp đều.", "warn"); }
+  commit();
+}
+/* ---------- Góp hụi (bà mối Tư làm chủ hụi) ---------- */
+const HUI_MEM = ["huong", "tham", "ba", "dao", "van"];
+const nextPhien = d => { let k = d; while (!isPhien(k)) k++; return k; };
+function huiJoin(ph){
+  const X = x16(); if (X.hui || S.money < ph) return;
+  X.hui = {ph, k:0, next:nextPhien(S.day + 1), mem:HUI_MEM.map(id => ({id, dead:false})), me:{dead:false}, bid:null, log:[], paid:0, got:0, owe:0};
+  addRel("moi", 3, "Bà mối Tư"); RLA.sfx("mua");
+  toast("Vào dây hụi 6 phần, mỗi phần " + ph + " đồng, mỗi phiên chợ khui một lần. Kỳ đầu ngày " + dis(X.hui.next) + "."); commit();
+}
+function huiBid(b){ const H = x16().hui; if (!H || H.me.dead) return; H.bid = b === "" ? null : +b; toast(H.bid === null ? "Kỳ này anh không bỏ thăm." : "Kỳ này anh bỏ thăm " + H.bid + " đồng để hốt hụi."); commit(); }
+function huiNight(notes){
+  const X = x16(), H = X.hui; if (!H || S.day < H.next) return;
+  const alive = H.mem.filter(m => !m.dead), meAlive = !H.me.dead;
+  let win = null, bid = 0;
+  const bids = alive.map(m => [m, Math.random() < 0.6 ? Math.round(Math.random()*H.ph*0.3) : 0]);
+  if (meAlive && (H.bid !== null || !alive.length)) bids.push(["me", H.bid || 0]);
+  if (!bids.length) bids.push([alive[0], 0]);
+  bids.sort((a, b) => b[1] - a[1] || (a[0] === "me" ? -1 : b[0] === "me" ? 1 : Math.random() - 0.5));
+  [win, bid] = bids[0];
+  if (meAlive && !alive.length){ win = "me"; bid = 0; }
+  const pay = m => m.dead ? H.ph : H.ph - bid;
+  let pot = 0; H.mem.forEach(m => { if (m !== win) pot += pay(m); });
+  if (win === "me"){
+    H.me.dead = true; S.money += pot; H.got += pot;
+    notes.push(["good", "Khui hụi kỳ " + (H.k + 1) + ": anh hốt hụi với thăm " + bid + " đồng, nhận về " + pot + " đồng."]);
+  } else {
+    win.dead = true; const mine = H.me.dead ? H.ph : H.ph - bid;
+    if (S.money >= mine){ S.money -= mine; H.paid += mine; } else { H.paid += S.money; H.owe += mine - S.money; S.money = 0; addRel("moi", -5, "Bà mối Tư"); }
+    notes.push([H.owe ? "bad" : "good", "Khui hụi kỳ " + (H.k + 1) + ": " + nN(win.id) + " hốt với thăm " + bid + " đồng. Anh góp " + mine + " đồng." + (H.owe ? " Còn nợ bà Tư " + H.owe + " đồng." : "")]);
+  }
+  H.log.push({k:H.k + 1, who:win === "me" ? "me" : win.id, bid, day:S.day});
+  H.k++; H.bid = null;
+  if (H.k >= 6){ const lai = H.got - H.paid - H.owe; X.hh.unshift({ph:H.ph, lai, end:S.day}); X.hh = X.hh.slice(0, 6); notes.push(["good", "Dây hụi mãn. Anh góp " + H.paid + " đồng, nhận " + H.got + " đồng, " + (lai >= 0 ? "lời " + lai : "chịu thiệt " + (-lai)) + " đồng."]); if (!H.owe) X.hui = null; else H.done = 1; }
+  else H.next = nextPhien(S.day + 1);
+}
+function huiPay(){ const H = x16().hui; if (!H || !H.owe) return; const d = Math.min(H.owe, S.money); S.money -= d; H.owe -= d; H.paid += d; if (!H.owe && H.done) x16().hui = null; toast("Trả bà Tư " + d + " đồng tiền hụi còn nợ."); commit(); }
+function huiHtml(){
+  const X = x16(), H = X.hui;
+  if (!H) return `<div class="sec"><h3>Góp hụi (bà Tư làm chủ hụi)</h3><p class="note">Dây hụi 6 phần: anh cùng bà Hương, cô Thắm, ông Ba, cô Đào, lái buôn Vạn. Mỗi phiên chợ (ngày 5 và 10) khui một lần. Ai cần tiền sớm thì bỏ thăm cao để hốt trước, những người chưa hốt được bớt đúng tiền thăm. Hốt muộn thì được lời, hốt sớm thì có tiền ngay nhưng chịu lãi.</p>
+    <div class="rows">${[30, 50, 100].map(ph => `<div class="row"><span class="e">🪙</span><span class="t"><b>Dây hụi ${ph} đồng một phần</b><small>Góp 5 kỳ, hốt 1 kỳ, cả dây được khoảng ${ph*5} đồng.</small></span><span class="a"><button class="btn s p" data-act="x16" data-k="hui" data-g="${ph}" ${S.money >= ph ? "" : "disabled"}>Vào dây</button></span></div>`).join("")}</div>
+    ${X.hh.length ? `<p class="note">Dây đã mãn: ${X.hh.map(h => h.ph + "đ/phần " + (h.lai >= 0 ? "lời " + h.lai : "lỗ " + (-h.lai)) + "đ").join(" · ")}</p>` : ""}</div>`;
+  const opts = [null, 0, Math.round(H.ph*0.1), Math.round(H.ph*0.2), Math.round(H.ph*0.3), Math.round(H.ph*0.4)];
+  const log = H.log.map(l => `<li><span>Kỳ ${l.k} (ngày ${dis(l.day)}): ${l.who === "me" ? "<b>anh hốt</b>" : esc(nN(l.who)) + " hốt"}, thăm ${l.bid}đ</span></li>`).join("");
+  return `<div class="sec"><h3>Dây hụi ${H.ph} đồng một phần</h3>
+   <div class="box" style="background:var(--bg)">${H.done ? "Dây đã mãn." : `Kỳ ${H.k + 1}/6 khui đêm trước phiên chợ ngày ${dis(H.next)}. Bỏ thăm trước khi đi ngủ.`} Anh đã góp ${H.paid}đ, đã nhận ${H.got}đ. ${H.me.dead ? "Anh đã hốt hụi, các kỳ sau góp đủ " + H.ph + "đ." : "Anh chưa hốt."}${H.owe ? ` <b>Còn nợ bà Tư ${H.owe}đ.</b>` : ""}</div>
+   ${H.owe ? `<div class="acts"><button class="btn s p" data-act="x16" data-k="huipay" ${S.money > 0 ? "" : "disabled"}>Trả nợ hụi</button></div>` : ""}
+   ${!H.me.dead && !H.done ? `<p class="note">Bỏ thăm kỳ tới (ai bỏ cao nhất thì hốt, nhận tiền góp của cả dây):</p><div class="acts">${opts.map(b => `<button class="btn s ${H.bid === b ? "p" : ""}" data-act="x16" data-k="bid" data-g="${b === null ? "" : b}">${b === null ? "Không hốt" : "Thăm " + b + "đ"}</button>`).join("")}</div>` : ""}
+   <ul class="notes">${H.mem.map(m => `<li><span>${esc(nN(m.id))}: ${m.dead ? "đã hốt" : "chưa hốt"}</span></li>`).join("")}</ul>
+   ${log ? `<p class="note"><b>Các kỳ đã khui</b></p><ul class="notes">${log}</ul>` : ""}</div>`;
+}
+{
+  const pm0 = PANELS.moi;
+  PANELS.moi = () => pm0() + huiHtml();
+}
+/* ---------- Chợ trời: bày hàng trong kho ra bán ---------- */
+const CT_NO = ["kiemco", "kiemsat", "kiemthep", "giapda", "giapsat", "khien", "bua", "traucau", "nhan", "duoc"];
+const CT_LV = [[1, "Rẻ", 1.5], [1.25, "Vừa", 1], [1.6, "Cao", 0.45]];
+MAPS.lang.places.chotroi = {n:"Chợ trời", x:29, y:26, w:3, h:1, door:[28.6,27,3.8,1.2], lab:"Bày hàng chợ trời"};
+ALLPLACES.chotroi = MAPS.lang.places.chotroi; PLACE_MAP.chotroi = "lang"; HOURS.chotroi = [6, 18];
+const ctOpen = () => { const C = x16().ct; return C && C.day === S.day && !C.shut ? C : null; };
+function ctOpenAct(){
+  const X = x16(); if (ctOpen() || S.money < 5 || S.time >= 1020) return;
+  S.money -= 5; X.ct = {day:S.day, items:{}, sold:{}, earn:0, t:S.time, lv:1, n:0};
+  RLA.sfx("mua"); toast("Nộp 5 đồng tiền chỗ, trải chiếu ở chợ trời. Chọn hàng trong kho bày ra."); commit();
+}
+function ctPut(g, n){
+  const C = ctOpen(); if (!C || !(S.goods[g] > 0)) return;
+  if (!C.items[g] && Object.keys(C.items).length >= 6){ toast("Chiếu chỉ bày được 6 thứ hàng.", "warn"); return; }
+  const k = n === "all" ? S.goods[g] : Math.min(+n, S.goods[g]); S.goods[g] -= k; C.items[g] = (C.items[g]||0) + k; commit();
+}
+function ctTake(g){ const C = ctOpen(); if (!C || !C.items[g]) return; S.goods[g] = (S.goods[g]||0) + C.items[g]; delete C.items[g]; commit(); }
+function ctLv(i){ const C = ctOpen(); if (!C) return; C.lv = +i; commit(); }
+const ctPrice = (g, C) => Math.max(1, Math.round(sellPrice(g)*CT_LV[C.lv][0]));
+function ctClose(why){
+  const X = x16(), C = X.ct; if (!C || C.shut) return null;
+  let back = 0; for (const g in C.items){ S.goods[g] = (S.goods[g]||0) + C.items[g]; back += C.items[g]; }
+  C.items = {}; C.shut = 1;
+  const msg = "Dọn sạp chợ trời: bán được " + C.n + " món, thu " + C.earn + " đồng" + (back ? ", còn " + back + " món mang về kho" : "") + ".";
+  if (why !== "night") toast(msg); return msg;
+}
+let KHACH = [];
+const KH_LOOK = [{ao:"#6E5A3E", quan:"#2E2A22", hat:"non"}, {ao:"#7A3E5C", quan:"#2A2420", hat:"khan", vay:true}, {ao:"#3E5C7A", quan:"#2A2420", hat:"non"}, {ao:"#8A6A3A", quan:"#3A3026", hat:"khan"}, {ao:"#5C7A3E", quan:"#2A2420", hat:"toc", vay:true, dai:"#B23A28"}];
+function ctTick(){
+  const C = ctOpen(); if (!C) return;
+  if (S.time < C.t) C.t = S.time;
+  if (S.time >= 1080){ const m = ctClose(); if (m) save(); return; }
+  while (S.time - C.t >= 10){
+    C.t += 10;
+    const keys = Object.keys(C.items).filter(g => C.items[g] > 0); if (!keys.length) break;
+    const perHour = 4*CT_LV[C.lv][2]*(isPhien(S.day) ? 1.6 : 1)*(S.ev && S.ev.id === "hoi" ? 1.3 : 1)*Math.min(1.6, 0.7 + keys.length*0.15);
+    if (Math.random() > Math.min(0.95, perHour/6)) continue;
+    const g = keys[Math.floor(Math.random()*keys.length)], k = Math.min(C.items[g], 1 + (Math.random() < 0.3 ? 1 : 0) + (Math.random() < 0.1 ? 2 : 0)), pr = ctPrice(g, C)*k;
+    C.items[g] -= k; if (!C.items[g]) delete C.items[g];
+    C.sold[g] = (C.sold[g]||0) + k; C.earn += pr; C.n += k; S.money += pr; stat("ban", k);
+    if (S.map === "lang" && KHACH.length < 4) KHACH.push({x:(25 + Math.random()*0.6)*T, y:(18 + Math.random())*T, st:0, t:0, L:KH_LOOK[Math.floor(Math.random()*KH_LOOK.length)], g, pr, dir:2, ph:0});
+  }
+}
+function updKhach(dt){
+  if (S.map !== "lang"){ KHACH = []; return; }
+  const p = PLACES.chotroi; if (!p) return;
+  for (const k of KHACH){
+    k.t += dt; k.ph += dt*8;
+    const tx = k.st === 0 ? (p.x + 1.5)*T : 25.3*T, ty = k.st === 0 ? (p.y + p.h + 0.9)*T : 18.4*T, dx = tx - k.x, dy = ty - k.y, d = Math.hypot(dx, dy);
+    if (k.st === 1){ if (k.t > 1.4){ k.st = 2; } continue; }
+    if (d < 4){ if (k.st === 0){ k.st = 1; k.t = 0; ftext(k.x, k.y - 70, "+" + k.pr + "đ", "#F2C94C"); RLA.sfx("ban"); } else k.gone = 1; continue; }
+    const v = 90*dt/d; k.x += dx*v; k.y += dy*v; k.dir = dir8(dx, dy);
+  }
+  KHACH = KHACH.filter(k => !k.gone);
+}
+function vChoTroi(){
+  const C = ctOpen(), X = x16();
+  if (!C){
+    const last = X.ct && X.ct.day === S.day ? X.ct : null;
+    return `<h2>Chợ trời làng Dâu</h2><p class="sub">Bãi đất trống cạnh chợ làng. Ai có gì cũng trải chiếu ra bán, giá tự đặt. Họp từ 6 giờ đến 18 giờ.</p>
+     ${last ? `<div class="box" style="background:var(--bg)">Hôm nay anh đã dọn sạp: bán ${last.n} món, thu ${last.earn} đồng.</div>` : ""}
+     <div class="sec rows"><div class="row"><span class="e">🧺</span><span class="t"><b>Trải chiếu bày hàng</b><small>Nộp 5 đồng tiền chỗ. Bày tối đa 6 thứ hàng lấy từ kho. Giá rẻ thì bán nhanh, giá cao thì lời nhiều mà ế. Phiên chợ, hội làng đông khách hơn. 18 giờ tự dọn, hàng ế mang về kho.</small></span>
+      <span class="a"><button class="btn s p" data-act="x16" data-k="ctopen" ${!last && S.money >= 5 && S.time < 1020 ? "" : "disabled"}>${last ? "Mai bày tiếp" : S.time >= 1020 ? "Muộn rồi" : "Bày hàng · 5đ"}</button></span></div></div>`;
+  }
+  const on = Object.entries(C.items).map(([g, n]) => `<div class="row"><span class="e">${GOODS[g].i}</span><span class="t"><b>${GOODS[g].n} · còn ${n}</b><small>Giá ${ctPrice(g, C)}đ một món (chợ làng mua ${sellPrice(g)}đ). Đã bán ${C.sold[g]||0}.</small></span><span class="a"><button class="btn s" data-act="x16" data-k="cttake" data-g="${g}">Cất về kho</button></span></div>`).join("");
+  const kho = Object.entries(GOODS).filter(([g, G]) => S.goods[g] > 0 && G.base > 0 && !CT_NO.includes(g)).map(([g, G]) => `<div class="row"><span class="e">${G.i}</span><span class="t"><b>${G.n}</b><small>Trong kho ${S.goods[g]} · bán ở đây ${ctPrice(g, C)}đ</small></span><span class="a"><button class="btn s" data-act="x16" data-k="ctput" data-g="${g}" data-n="1">Bày 1</button><button class="btn s p" data-act="x16" data-k="ctput" data-g="${g}" data-n="all">Bày hết</button></span></div>`).join("");
+  return `<h2>Sạp chợ trời của anh</h2><p class="sub">Đang họp. Bán được ${C.n} món, thu ${C.earn} đồng. 18 giờ tự dọn.</p>
+   <div class="sec"><h3>Giá bán</h3><div class="acts">${CT_LV.map((L, i) => `<button class="btn s ${C.lv === i ? "p" : ""}" data-act="x16" data-k="ctlv" data-g="${i}">${L[1]} (${Math.round(L[0]*100)}% giá chợ)</button>`).join("")}</div></div>
+   <div class="sec"><h3>Đang bày (${Object.keys(C.items).length}/6)</h3>${on ? `<div class="rows">${on}</div>` : `<p class="note">Chưa bày gì. Chọn hàng trong kho bên dưới.</p>`}</div>
+   <div class="sec"><h3>Hàng trong kho</h3>${kho ? `<div class="rows">${kho}</div>` : `<p class="note">Kho trống.</p>`}</div>
+   <div class="acts"><button class="btn" data-act="x16" data-k="ctclose">Dọn sạp sớm</button></div>`;
+}
+/* ---------- Sổ nợ: theo dõi ai đang vay ---------- */
+function vSoNo(){
+  const X = x16(), H = X.hui;
+  const req = X.req.map((r, i) => `<div class="box" style="background:var(--bg);margin-bottom:10px"><b>🙏 ${esc(nN(r.who))} xin vay ${r.amt} đồng</b><br><small class="note">“${esc(r.why)}” Hẹn góp trong ${TERM} ngày. Chờ trả lời đến hết ngày ${dis(r.until)}.</small>
+    <div class="acts" style="margin-top:8px;justify-content:flex-start">${r.who === "linh1" ? `<button class="btn s p" data-act="x16" data-k="lend" data-g="${i}" data-r="0" ${S.money >= r.amt ? "" : "disabled"}>Cho vay</button>` : RATES.map((R, ri) => `<button class="btn s ${ri === 0 ? "p" : ""}" data-act="x16" data-k="lend" data-g="${i}" data-r="${ri}" ${S.money >= r.amt ? "" : "disabled"}>Lãi ${R[1]} ${Math.round(R[0]*100)}%</button>`).join("")}<button class="btn s" data-act="x16" data-k="refuse" data-g="${i}">Từ chối</button></div></div>`).join("");
+  const act = X.loans.filter(L => L.st === "dang");
+  const tr = act.map(L => { const i = X.loans.indexOf(L); return `<tr><td>${esc(nN(L.who))}</td><td class="num">${L.amt}</td><td class="num">${L.who === "linh1" ? "?" : Math.round(L.rate*100) + "%"}</td><td class="num">${L.paid}/${L.tot}</td><td class="num">${L.who === "linh1" ? "–" : L.per}</td><td>${L.miss ? `<span class="bad">trễ ${L.miss} ngày</span>` : "đều"}</td><td>${L.miss ? `<button class="btn s" data-act="x16" data-k="dun" data-g="${i}" ${L.dn !== S.day && S.suc >= 1 ? "" : "disabled"}>${L.dn === S.day ? "Đã đòi" : "Đòi nợ"}</button>` : ""}</td></tr>`; }).join("");
+  const out = act.reduce((s, L) => s + loanLeft(L), 0);
+  const old = X.done.map(L => `<li class="${L.st === "xong" ? "good" : "bad"}"><span>${esc(nN(L.who))}: vay ${L.amt}đ, ${L.st === "xong" ? "trả đủ " + L.tot + "đ" : "xù nợ, mất " + loanLeft(L) + "đ"} (ngày ${dis(L.end)})</span></li>`).join("");
+  const C = X.ct && X.ct.day === S.day ? X.ct : null;
+  return `<h2>Sổ nợ</h2><p class="sub">Ai hỏi vay, ai đang góp, ai trễ hẹn. Người làng tự sang hỏi vay vào buổi sáng. Lãi nhẹ thì người ta quý, lãi nặng thì hay trễ, đòi gắt thì mất lòng.</p>
+   <div class="box" style="background:var(--bg)">Đang cho vay: <b>${act.length}</b> người, còn phải thu <b>${out}</b> đồng. Lãi đã thu: <b>${X.lai}</b> đồng.${H ? ` · Hụi: kỳ ${Math.min(6, H.k + 1)}/6${H.owe ? ", còn nợ " + H.owe + "đ" : ""}.` : ""}${C ? ` · Chợ trời hôm nay: ${C.n} món, ${C.earn}đ.` : ""}</div>
+   ${req ? `<div class="sec"><h3>Người hỏi vay</h3>${req}</div>` : ""}
+   <div class="sec"><h3>Đang góp nợ</h3>${tr ? `<div style="overflow-x:auto"><table class="sono"><thead><tr><th>Người vay</th><th>Vay</th><th>Lãi</th><th>Đã trả</th><th>Góp/ngày</th><th>Tình hình</th><th></th></tr></thead><tbody>${tr}</tbody></table></div>` : `<p class="note">Chưa cho ai vay.</p>`}</div>
+   ${old ? `<div class="sec"><h3>Đã xong</h3><ul class="notes">${old}</ul></div>` : ""}
+   <p class="note sec">Góp hụi ở chỗ bà mối Tư (chợ làng Dâu). Chợ trời ở bãi đất cạnh chợ làng.</p>`;
+}
+Object.assign(PANELS, {sono:vSoNo, chotroi:vChoTroi});
+document.head.insertAdjacentHTML("beforeend", `<style>table.sono{width:100%;border-collapse:collapse;font-size:.84rem}table.sono th{text-align:left;font-weight:700;color:var(--ink);padding:6px 6px;border-bottom:2px solid rgba(0,0,0,.15);white-space:nowrap}table.sono td{padding:6px 6px;border-bottom:1px solid rgba(0,0,0,.08);vertical-align:middle}table.sono td.num{text-align:right;font-variant-numeric:tabular-nums}table.sono .bad{color:#B23A28;font-weight:600}</style>`);
+MANH.giayno = ["Giấy nợ của Cả Lợi", () => "Cả Lợi vay 200 đồng, điểm chỉ vào giấy, hứa trả bằng bạc “quan trên ở kinh” gửi về."];
+{
+  const nr0 = nightRen;
+  nightRen = function(notes){
+    const m = x16().ct && !x16().ct.shut ? ctClose("night") : null; if (m) notes.push(["good", m]);
+    nr0(notes); nightLoans(notes); huiNight(notes); genReq(notes);
+  };
+  const cu0 = ctUpd;
+  ctUpd = function(dt, free){ cu0(dt, free); ctTick(); updKhach(dt); };
+  const dx0 = drawExtra11;
+  drawExtra11 = function(sp, t){
+    dx0(sp, t);
+    if (S.map !== "lang") return;
+    const p = PLACES.chotroi, C = ctOpen(); if (!p) return;
+    sp.push([(p.y + p.h)*T - 2, () => {
+      const x = p.x*T, y = p.y*T + 6, w = p.w*T;
+      cx.fillStyle = "rgba(0,0,0,.15)"; cx.fillRect(x + 3, y + 5, w, T - 8);
+      cx.fillStyle = C ? "#C9A24E" : "#B8A47A"; cx.fillRect(x, y, w, T - 8); cx.fillStyle = "#A07F33"; for (let k = 0; k < 6; k++) cx.fillRect(x, y + 3 + k*4, w, 1);
+      if (C){ const ks = Object.keys(C.items); ks.forEach((g, i) => drawItemAt(g, x + 16 + (i % 3)*32, y + 8 + Math.floor(i/3)*11, 20)); }
+      else { cx.fillStyle = "#6E4823"; cx.font = "700 11px 'Be Vietnam Pro',sans-serif"; cx.textAlign = "center"; cx.fillText("Chợ trời", x + w/2, y + 15); }
+    }]);
+    if (C) sp.push([p.y*T + 8, () => person((p.x + 1.5)*T, p.y*T + 10, 2, 0, false, {ao:"#6E5A3E", quan:"#2E2A22", hat:"non"}) ]);
+    for (const k of KHACH) sp.push([k.y, () => { person(k.x, k.y, k.dir, k.ph, k.st !== 1, k.L); if (k.st === 1) drawItemAt(k.g, k.x, k.y - 62, 16); }]);
+  };
+  const pc0 = PANELS.cho;
+  PANELS.cho = () => pc0() + `<p class="note sec">Muốn tự đặt giá thì ra <b>chợ trời</b> ở bãi đất ngay phía nam dãy hàng, trải chiếu bày hàng trong kho ra bán.</p>`;
+  const ct0 = ctTasks;
+  ctTasks = function(){
+    const L = ct0(), C = ctS(), X = x16();
+    if ((C.ch === 1 || C.ch === 2) && X.cl && X.loans.concat(X.done).some(l => l.who === "linh1") && !hasM("giayno")) L.push({t:"Phụ: đòi nợ Cả Lợi", d:"Hắn trễ góp thì mở Sổ nợ, bấm Đòi nợ. Giữ tờ giấy nợ làm bằng chứng.", done:false});
+    return L;
+  };
+}
+function x16Act(k, d){
+  if (k === "lend") lend(+d.g, +d.r);
+  else if (k === "refuse") refuse(+d.g);
+  else if (k === "dun") dunLoan(+d.g);
+  else if (k === "hui") huiJoin(+d.g);
+  else if (k === "bid") huiBid(d.g);
+  else if (k === "huipay") huiPay();
+  else if (k === "ctopen") ctOpenAct();
+  else if (k === "ctput") ctPut(d.g, d.n);
+  else if (k === "cttake") ctTake(d.g);
+  else if (k === "ctlv") ctLv(d.g);
+  else if (k === "ctclose") ctClose();
+}
+function showNew16(){
+  S.seen16 = true; save();
+  openModal(`<h2>Bản 16 có gì mới</h2><ul class="notes">
+   <li class="good">Cho vay tiền góp: người làng tự sang hỏi vay buổi sáng. Anh chọn lãi nhẹ 10%, vừa 20% hay nặng 40%, người vay góp trả mỗi ngày trong 10 ngày. Lãi nhẹ thì người ta quý, lãi nặng hay trễ hẹn, trễ 6 ngày là xù nợ.</li>
+   <li class="good">Sổ nợ (nút Sổ nợ bên phải, phím N): bảng theo dõi ai đang vay, đã trả bao nhiêu, ai trễ hẹn, nút Đòi nợ.</li>
+   <li class="good">Góp hụi ở chỗ bà mối Tư: dây 6 phần, mỗi phiên chợ khui một lần, bỏ thăm để hốt trước hoặc chờ hốt sau lấy lời.</li>
+   <li class="good">Chợ trời ở bãi đất cạnh chợ làng Dâu: trải chiếu, bày tối đa 6 thứ hàng trong kho, tự chọn giá rẻ, vừa, cao. Khách tự đến mua, 18 giờ dọn sạp.</li>
+   <li class="good">Truyện: Cả Lợi có thể sang hỏi vay. Tờ giấy nợ của hắn sẽ thành bằng chứng.</li></ul>
+   <div class="acts"><button class="btn p" data-act="close">Ra đồng</button></div>`);
+}
+
+/* ===== Bản 17: săn bắt ngựa hoang trên núi, thuần ngựa, cưỡi ngựa chạy nhanh ===== */
+const x17 = () => { S.x17 = S.x17 || {}; const X = S.x17; X.ng = X.ng || []; X.cur = X.cur || 0; return X; };
+GOODS.thong = {n:"Dây thòng lọng", i:"🪢", base:25, shop:true};
+const HORSE = {
+  o:{n:"Ngựa ô", col:"#2A2622", mane:"#141210", spd:1.85, zone:0.24, nerv:2.2, p:50},
+  hong:{n:"Ngựa hồng", col:"#9A4E2A", mane:"#4A2414", spd:1.75, zone:0.28, nerv:1.8, p:40},
+  bach:{n:"Ngựa bạch", col:"#EDE8DC", mane:"#BDB6A6", spd:2.3, zone:0.14, nerv:3.2, p:10}
+};
+const HNAME = ["Gió", "Mây", "Sấm", "Xích Thố", "Ô Truy", "Bạch Long", "Hồng Vân", "Phi Vân", "Thiên Lý", "Tuấn Mã"];
+const HPOST = [23.6, 16.4];
+let WILD = [], RIDE = false, HFX = {ph:0}, LZ = null;
+const curH = () => { const X = x17(); return X.ng[X.cur] || X.ng[0] || null; };
+const hFed = h => h.an >= S.day - 1;
+function rideMul(){ if (!RIDE) return 1; const h = curH(); if (!h) return 1; return HORSE[h.c].spd*(hFed(h) ? 1 : 0.75); }
+/* ---------- Ngựa hoang trên núi Thiên Thai ---------- */
+function spawnWild(){
+  const X = x17();
+  if (X.wd !== S.day){ X.wd = S.day; X.wgone = []; const n = 2 + (Math.random() < 0.35 ? 1 : 0); X.wl = []; for (let i = 0; i < n; i++){ const r = Math.random()*100; X.wl.push(r < HORSE.bach.p ? "bach" : r < HORSE.bach.p + HORSE.hong.p ? "hong" : "o"); } }
+  WILD = [];
+  if (S.map !== "nui") return;
+  const spots = [[6, 14], [10, 22], [28, 15], [30, 23], [13, 18], [25, 21]];
+  X.wl.forEach((c, i) => { if (X.wgone.includes(i)) return; const s = spots[(i*2 + S.day) % spots.length]; WILD.push({i, c, x:s[0]*T, y:s[1]*T, hx:s[0]*T, hy:s[1]*T, dir:i % 2 ? 1 : 3, ph:0, mv:false, st:"an", t:Math.random()*3, nv:0, tx:0, ty:0}); });
+}
+function updWild(dt){
+  for (const h of WILD){
+    if (h.st === "bat") continue;
+    const D = HORSE[h.c], dx = h.x - P.x, dy = h.y - P.y, d = Math.hypot(dx, dy);
+    if (d < 2.8*T && P.mv && !RIDE) h.nv += dt*D.nerv; else if (d < 2*T && P.mv && RIDE) h.nv += dt*D.nerv*0.5; else h.nv = Math.max(0, h.nv - dt*0.8);
+    if (h.nv >= 1 && h.st !== "chay"){ h.st = "chay"; h.t = 2.2; emo(h, "gian"); RLA.sfx("canhbao"); }
+    h.mv = false; h.t -= dt;
+    if (h.st === "chay"){
+      const l = d || 1, sp = 175*dt; const ox = h.x, oy = h.y; tryMove(h, dx/l*sp, dy/l*sp);
+      if (Math.hypot(h.x - ox, h.y - oy) < sp*0.3){ tryMove(h, -dy/l*sp, dx/l*sp); }
+      h.mv = true; h.ph += dt*14; h.dir = dx < 0 ? 3 : 1;
+      if (h.t <= 0){ h.st = "an"; h.nv = 0.3; h.t = 2 + Math.random()*3; }
+    } else if (h.st === "di"){
+      const ex = h.tx - h.x, ey = h.ty - h.y, l = Math.hypot(ex, ey);
+      if (l < 4 || h.t <= 0){ h.st = "an"; h.t = 2 + Math.random()*4; }
+      else { const sp = 40*dt; tryMove(h, ex/l*sp, ey/l*sp); h.mv = true; h.ph += dt*6; h.dir = ex < 0 ? 3 : 1; }
+    } else if (h.t <= 0){ h.st = "di"; h.t = 4; h.tx = h.hx + (Math.random() - 0.5)*5*T; h.ty = h.hy + (Math.random() - 0.5)*4*T; }
+    if (h.emo){ h.emo.t -= dt; if (h.emo.t <= 0) h.emo = null; }
+  }
+}
+/* Quăng thòng lọng: kim chạy qua lại, bấm đúng ô xanh */
+function lassoStart(h){
+  if (!(S.goods.thong > 0)){ toast("Cần một sợi dây thòng lọng. Chợ làng Dâu có bán, 25 đồng.", "warn"); return; }
+  if (RIDE){ toast("Xuống ngựa đã rồi hãy quăng dây.", "warn"); return; }
+  if (S.suc < 1){ toast("Hết sức rồi, về nghỉ đã.", "warn"); return; }
+  useSuc(1); h.st = "bat"; P.dir = dir8(h.x - P.x, h.y - P.y);
+  LZ = {h, step:0, miss:0, x:0, v:0.9, zone:HORSE[h.c].zone, z0:0.2 + Math.random()*0.5, run:true};
+  lzShow(); requestAnimationFrame(lzLoop);
+}
+function lzShow(){
+  const Z = LZ, D = HORSE[Z.h.c];
+  const title = Z.step === 0 ? "Quăng thòng lọng" : "Thuần ngựa · lượt " + Z.step + "/3";
+  const tip = Z.step === 0 ? "Bấm “Quăng!” (hoặc phím Space, E) khi kim nằm trong ô xanh." : "Con ngựa chồm lên hất anh. Bấm “Ghì cương!” đúng lúc kim vào ô xanh. Trượt 2 lần là ngựa giật đứt dây chạy mất.";
+  openModal(`<p class="cthead">Săn ngựa hoang</p><h2>${title}</h2><p class="note">${D.n}. ${tip}</p>
+   <div class="lzbar"><div class="lzz" style="left:${Z.z0*100}%;width:${Z.zone*100}%"></div><div class="lzn" id="lzn"></div></div>
+   ${Z.step ? `<p class="note">Đã trượt ${Z.miss}/2 lần.</p>` : ""}
+   <div class="acts"><button class="btn" data-act="x17" data-k="lzquit">Thôi</button><button class="btn p" data-act="x17" data-k="lzhit">${Z.step === 0 ? "Quăng!" : "Ghì cương!"}</button></div>`, true);
+}
+function lzLoop(ts){
+  if (!LZ || !LZ.run) return;
+  const Z = LZ; Z.lt = Z.lt || ts; const dt = Math.min(0.05, (ts - Z.lt)/1000); Z.lt = ts;
+  Z.x += Z.v*dt*(Z.dir || 1); if (Z.x >= 1){ Z.x = 1; Z.dir = -1; } if (Z.x <= 0){ Z.x = 0; Z.dir = 1; }
+  const el = document.getElementById("lzn"); if (el) el.style.left = (Z.x*100) + "%";
+  requestAnimationFrame(lzLoop);
+}
+function lzHit(){
+  const Z = LZ; if (!Z || !Z.run) return;
+  const ok = Z.x >= Z.z0 && Z.x <= Z.z0 + Z.zone;
+  if (Z.step === 0){
+    if (!ok){ Z.run = false; LZ = null; closeModal(); const h = Z.h; h.st = "chay"; h.t = 2.5; emo(h, "gian"); RLA.sfx("canhbao"); toast("Trượt rồi! Con " + HORSE[h.c].n.toLowerCase() + " hí vang, phi mất. Lại gần rồi thử lại."); return; }
+    RLA.sfx("thang"); Z.step = 1; Z.v = 1.15; Z.z0 = 0.15 + Math.random()*0.6; lzShow(); return;
+  }
+  if (ok){ Z.step++; RLA.sfx("tap"); if (Z.step > 3){ Z.run = false; lzWin(Z.h); return; } Z.v += 0.3; Z.z0 = 0.1 + Math.random()*(0.9 - Z.zone); lzShow(); return; }
+  Z.miss++; S.suc = Math.max(0, S.suc - 1); RLA.sfx("canhbao");
+  if (Z.miss >= 2){ Z.run = false; LZ = null; closeModal(); x17().wgone.push(Z.h.i); WILD = WILD.filter(w => w !== Z.h); if (Math.random() < 0.5 && S.goods.thong > 0){ S.goods.thong--; toast("Ngựa giật đứt dây thòng lọng, phi mất vào rừng. Mai lại có ngựa khác.", "warn"); } else toast("Ngựa hất anh ngã nhào rồi phi mất. Mai lên núi thử lại.", "warn"); commit(); return; }
+  Z.z0 = 0.1 + Math.random()*(0.9 - Z.zone); lzShow();
+}
+function lzQuit(){ if (!LZ) return; const h = LZ.h; LZ.run = false; LZ = null; closeModal(); h.st = "chay"; h.t = 2; }
+function lzWin(h){
+  const X = x17(); LZ = null;
+  X.wgone.push(h.i); WILD = WILD.filter(w => w !== h);
+  if (X.ng.length >= 2){ closeModal(); toast("Nhà chỉ nuôi được 2 con ngựa. Anh thả con này về núi.", "warn"); return; }
+  const name = HNAME.filter(n => !X.ng.some(g => g.n === n))[Math.floor(Math.random()*6)] || "Tuấn Mã";
+  X.ng.push({c:h.c, n:name, an:S.day, d:S.day}); X.cur = X.ng.length - 1; stat("ngua");
+  S.titles = S.titles || []; const tt = "Người thuần ngựa"; if (!S.titles.includes(tt)) S.titles.push(tt);
+  commit();
+  sceneH("Săn ngựa hoang", [K_("Con " + HORSE[h.c].n.toLowerCase() + " thở phì phì rồi đứng yên, dụi mõm vào vai anh."), K_("Anh đặt tên nó là " + name + ". Từ nay bấm nút Cưỡi ngựa (phím H) để cưỡi, đi nhanh gần gấp đôi. Mỗi đêm ngựa ăn 1 cỏ hoặc 1 rơm trong kho.")]);
+}
+/* ---------- Cưỡi ngựa ---------- */
+function rideToggle(){
+  const h = curH(); if (!h){ toast("Chưa có ngựa. Lên núi Thiên Thai săn ngựa hoang, mang theo dây thòng lọng.", "warn"); return; }
+  if (!RIDE && S.map === "hang"){ toast("Trong hang không cưỡi ngựa được.", "warn"); return; }
+  if (!RIDE && inFight()){ toast("Đang đánh nhau, không lên ngựa được.", "warn"); return; }
+  RIDE = !RIDE; const X = x17();
+  if (RIDE){ X.at = null; RLA.sfx("thang"); toast("Huýt sáo gọi " + h.n + ". Lên ngựa!" + (hFed(h) ? "" : " Ngựa đói, chạy chậm hơn.")); }
+  else { X.at = {map:S.map, x:P.x + 26, y:P.y + 4}; toast("Xuống ngựa, " + h.n + " đứng chờ."); }
+  render();
+}
+function dismount(why){ if (!RIDE) return; RIDE = false; x17().at = {map:S.map, x:P.x + 26, y:P.y + 4}; if (why) toast(why); render(); }
+function drawHorse(x, y, dir, ph, mv, c, ride){
+  const D = HORSE[c], fl = dir === 3 || dir === 5 || dir === 7 || (dir === 0 || dir === 2 ? HFX.fl : false) ? -1 : 1;
+  if (dir === 1 || dir === 3 || dir >= 4) HFX.fl = fl < 0;
+  const g = cx; g.save(); g.translate(x, y); g.scale(fl, 1);
+  g.fillStyle = "rgba(0,0,0,.2)"; g.beginPath(); g.ellipse(0, 0, 34, 7, 0, 0, 7); g.fill();
+  const sw = mv ? Math.sin(ph) : 0, col = D.col, dk = shade(col, 0.78);
+  const leg = (lx, a, cc) => { g.save(); g.translate(lx, -26); g.rotate(a); g.fillStyle = cc; g.fillRect(-3, 0, 6, 25); g.fillStyle = "#2A2420"; g.fillRect(-3.5, 22, 7, 5); g.restore(); };
+  leg(-18, -sw*0.45, dk); leg(15, sw*0.45, dk);
+  g.fillStyle = D.mane; g.beginPath(); g.moveTo(-28, -34); g.quadraticCurveTo(-44 - sw*3, -26, -38, -10); g.lineTo(-33, -12); g.quadraticCurveTo(-36, -24, -26, -30); g.fill();
+  g.fillStyle = col; g.beginPath(); g.ellipse(-2, -34, 30, 13, 0, 0, 7); g.fill();
+  g.beginPath(); g.moveTo(18, -40); g.lineTo(30, -66); g.lineTo(40, -62); g.lineTo(30, -30); g.closePath(); g.fill();
+  g.beginPath(); g.ellipse(40, -62, 12, 6.5, 0.5, 0, 7); g.fill();
+  g.fillStyle = dk; g.beginPath(); g.moveTo(30, -70); g.lineTo(33, -78); g.lineTo(35, -68); g.fill();
+  g.fillStyle = D.mane; g.beginPath(); g.moveTo(18, -42); g.lineTo(28, -70); g.lineTo(33, -68); g.lineTo(23, -40); g.fill();
+  g.fillStyle = "#141210"; g.beginPath(); g.arc(37, -64, 1.6, 0, 7); g.fill();
+  leg(-12, sw*0.45, col); leg(21, -sw*0.45, col);
+  if (ride){ g.fillStyle = "#7A2E22"; g.fillRect(-14, -48, 24, 12); g.fillStyle = "#E3B53C"; g.fillRect(-14, -38, 24, 2.5); g.strokeStyle = "#3A2A1A"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(10, -44); g.lineTo(38, -60); g.stroke(); }
+  g.restore();
+}
+{
+  const dm0 = drawMe;
+  drawMe = function(){
+    if (!RIDE){ dm0(); return; }
+    const h = curH(); if (!h){ RIDE = false; dm0(); return; }
+    HFX.ph += P.mv ? 0.35 : 0;
+    drawHorse(P.x, P.y, P.dir, HFX.ph, P.mv, h.c, true);
+    const y0 = P.y, mv0 = P.mv; P.y -= 30; P.mv = false;
+    cx.save(); cx.beginPath(); cx.rect(P.x - 60, P.y - 140, 120, 140 - 4); cx.clip(); dm0(); cx.restore();
+    P.y = y0; P.mv = mv0;
+    const fl = HFX.fl ? -1 : 1; cx.save(); cx.translate(P.x, P.y); cx.scale(fl, 1); cx.fillStyle = "#7A2E22"; cx.fillRect(-14, -48, 24, 12); cx.fillStyle = "#E3B53C"; cx.fillRect(-14, -38, 24, 2.5); cx.restore();
+  };
+  const dx0 = drawExtra11;
+  drawExtra11 = function(sp, t){
+    dx0(sp, t);
+    for (const w of WILD) sp.push([w.y, () => { drawHorse(w.x, w.y, w.dir, w.ph, w.mv, w.c, false); if (w.emo) drawEmo(w.x, w.y - 84, w.emo); }]);
+    const X = x17(), h = curH();
+    if (h && !RIDE){
+      const at = X.at && X.at.map === S.map ? X.at : S.map === "nha" ? {x:HPOST[0]*T, y:HPOST[1]*T} : null;
+      if (at){
+        if (S.map === "nha" && !(X.at && X.at.map === "nha")) sp.push([at.y - 1, () => { cx.fillStyle = "#6E4823"; cx.fillRect(at.x - 44, at.y - 40, 5, 42); cx.strokeStyle = "#8A7A5A"; cx.lineWidth = 1.5; cx.beginPath(); cx.moveTo(at.x - 40, at.y - 32); cx.quadraticCurveTo(at.x - 4, at.y - 44, at.x + 20, at.y - 56); cx.stroke(); }]);
+        sp.push([at.y, () => drawHorse(at.x, at.y, 1, 0, false, h.c, true)]);
+        if (X.ng[1] && S.map === "nha"){ const h2 = X.ng[X.cur === 0 ? 1 : 0]; sp.push([at.y + 30, () => drawHorse(at.x - 6, at.y + 30, 3, 0, false, h2.c, false)]); }
+      } else if (S.map === "nha" && X.ng[1]){ const h2 = X.ng[X.cur === 0 ? 1 : 0]; sp.push([HPOST[1]*T, () => drawHorse(HPOST[0]*T, HPOST[1]*T, 1, 0, false, h2.c, false)]); }
+    } else if (h && RIDE && S.map === "nha" && X.ng[1]){ const h2 = X.ng[X.cur === 0 ? 1 : 0]; sp.push([HPOST[1]*T, () => drawHorse(HPOST[0]*T, HPOST[1]*T, 1, 0, false, h2.c, false)]); }
+  };
+  const di0 = digItems;
+  digItems = function(L){
+    di0(L);
+    for (const w of WILD) if (w.st !== "bat") L.push({id:"ngua" + w.i, r:[w.x - 74, w.y - 90, 148, 116], foot:[w.x - 40, w.y + 30], lab:"Quăng thòng lọng bắt " + HORSE[w.c].n.toLowerCase(), go:() => lassoStart(w), npc:true});
+    const X = x17(), h = curH();
+    if (h && !RIDE){ const at = X.at && X.at.map === S.map ? X.at : S.map === "nha" ? {x:HPOST[0]*T, y:HPOST[1]*T} : null; if (at) L.push({id:"ngua_me", r:[at.x - 34, at.y - 70, 68, 72], foot:[at.x - 40, at.y + 10], lab:"Cưỡi " + h.n, go:rideToggle, npc:true}); }
+  };
+  const lm0 = loadMap;
+  let wildMap = null;
+  loadMap = function(id){
+    lm0(id); if (!S || id !== S.map || wildMap === id) return;
+    wildMap = id; const X = x17(); if (X.at && X.at.map !== id) X.at = null;
+    if (id === "hang" && RIDE){ RIDE = false; setTimeout(() => toast("Ngựa không vào được hang, anh buộc ngựa ở cửa hang."), 400); }
+    spawnWild();
+  };
+  const cu0 = ctUpd;
+  ctUpd = function(dt, free){ cu0(dt, free); if (free) updWild(dt); if (RIDE && inFight()) dismount("Gặp giặc! Anh nhảy xuống ngựa."); };
+  const ta0 = toolAct;
+  toolAct = function(k, i){ if (RIDE) dismount("Xuống ngựa làm việc."); return ta0(k, i); };
+  const nr0 = nightRen;
+  nightRen = function(notes){
+    nr0(notes);
+    const X = x17(); if (!X.ng.length) return;
+    let hungry = 0;
+    for (const h of X.ng){ if (S.goods.co > 0){ S.goods.co--; h.an = S.day; } else if (S.goods.rom > 0){ S.goods.rom--; h.an = S.day; } else hungry++; }
+    if (hungry) notes.push(["bad", "Kho hết cỏ, hết rơm. " + hungry + " con ngựa nhịn đói, mai chạy chậm hơn."]);
+    RIDE = false; X.at = null; wildMap = null;
+  };
+  const pc0 = PANELS.cho;
+  PANELS.cho = () => pc0() + `<div class="sec rows"><div class="row"><span class="e">🪢</span><span class="t"><b>Dây thòng lọng</b><small>Bện bằng đay. Mang lên núi Thiên Thai bắt ngựa hoang. Đang có ${S.goods.thong||0} sợi.</small></span><span class="a"><button class="btn s p" data-act="buyg" data-g="thong" data-n="1" data-p="25" ${S.money >= 25 ? "" : "disabled"}>Mua · 25đ</button></span></div></div>`;
+  const pt0 = PANELS.tui;
+  PANELS.tui = () => { const X = x17(); return pt0() + (X.ng.length ? `<div class="sec"><h3>Ngựa nhà mình</h3><div class="rows">${X.ng.map((h, i) => `<div class="row"><span class="e">🐎</span><span class="t"><b>${esc(h.n)} · ${HORSE[h.c].n}${i === X.cur ? '<span class="pill">đang cưỡi</span>' : ""}</b><small>Nhanh gấp ${String(HORSE[h.c].spd).replace(".", ",")} lần đi bộ. ${hFed(h) ? "No bụng." : "Đang đói, chạy chậm."} Mỗi đêm ăn 1 cỏ hoặc 1 rơm.</small></span><span class="a">${i !== X.cur ? `<button class="btn s" data-act="x17" data-k="cur" data-g="${i}">Chọn cưỡi</button>` : ""}</span></div>`).join("")}</div></div>` : ""); };
+  const ho = NPCS.find(n => n.id === "ho"); if (ho){ const tf = ho.tips; ho.tips = () => tf().concat(["Muốn thi võ thì phải biết cưỡi ngựa. Lên núi Thiên Thai mà bắt ngựa hoang, nhớ mang dây thòng lọng.", "Ngựa bạch chạy nhanh nhất mà cũng nhát nhất. Lại gần phải nhẹ chân."]); }
+  const ti = NPCS.find(n => n.id === "ti"); if (ti){ const tf = ti.tips; ti.tips = () => tf().concat(["Trên núi Thiên Thai có ngựa hoang đấy anh. Đi nhanh là nó chạy mất, phải đứng yên rồi quăng dây."]); }
+}
+document.head.insertAdjacentHTML("beforeend", `<style>.lzbar{position:relative;height:34px;border-radius:10px;background:#E9DFC6;border:2px solid rgba(0,0,0,.15);margin:14px 0 6px;overflow:hidden}.lzz{position:absolute;top:0;bottom:0;background:#6FA84A}.lzn{position:absolute;top:-2px;bottom:-2px;width:6px;margin-left:-3px;background:#B23A28;border-radius:3px;box-shadow:0 0 0 2px #fff}</style>`);
+document.addEventListener("keydown", e => { if (LZ && LZ.run && (e.code === "Space" || e.code === "KeyE" || e.code === "Enter")){ e.preventDefault(); lzHit(); } else if (modal.hidden && !e.repeat && e.code === "KeyH" && !e.ctrlKey && !e.metaKey) rideToggle(); });
+function x17Act(k, d){
+  if (k === "lzhit") lzHit();
+  else if (k === "lzquit") lzQuit();
+  else if (k === "ride") rideToggle();
+  else if (k === "cur"){ const X = x17(); if (X.ng[+d.g]){ X.cur = +d.g; if (RIDE) RIDE = false; toast("Chọn cưỡi " + X.ng[X.cur].n + "."); commit(); } }
+}
+function showNew17(){
+  S.seen17 = true; save();
+  openModal(`<h2>Bản 17 có gì mới</h2><ul class="notes">
+   <li class="good">Săn ngựa hoang trên núi Thiên Thai: mỗi ngày có 2–3 con (ngựa ô, ngựa hồng, hiếm khi có ngựa bạch). Mua dây thòng lọng ở chợ làng Dâu (25 đồng).</li>
+   <li class="good">Đi nhanh là ngựa hoảng chạy mất. Lại gần nhẹ nhàng, bấm Làm để quăng thòng lọng (bấm đúng lúc kim vào ô xanh), rồi ghì cương 3 lượt để thuần ngựa.</li>
+   <li class="good">Cưỡi ngựa: nút Cưỡi ngựa bên phải hoặc phím H. Ngựa ô, ngựa hồng nhanh gần gấp đôi đi bộ, ngựa bạch nhanh hơn nữa. Làm ruộng, vào hang, gặp giặc thì tự xuống ngựa.</li>
+   <li class="good">Ngựa buộc ở cọc cạnh giếng nhà mình, mỗi đêm ăn 1 cỏ hoặc 1 rơm. Nuôi tối đa 2 con, đổi con cưỡi trong Túi đồ.</li></ul>
+   <div class="acts"><button class="btn p" data-act="close">Ra đồng</button></div>`);
+}
+
+/* ===== Bản 18: vào trong nhà, quán, hiệu thuốc, lò rèn, công đường, đình, quán trọ ===== */
+const x18 = () => (S.x18 = S.x18 || {});
+/* f: đồ đạc [kiểu, x, y, w, h, nhãn, việc]; ng: người làng đứng trong nhà [id, x, y] */
+const INSIDE = {
+  in_nha:{k:"nha", map:"nha", n:"Trong nhà mình", w:16, h:10, floor:"dat", wall:"#8A6A44", door:[7, 2], cot:[4, 12],
+    f:[["giuong", 1, 2.6, 3.4, 2.2, "Lên giường đi ngủ", () => inSleep()], ["bantho", 6.5, 2.1, 3, 1.1, "Thắp hương bàn thờ tổ tiên", () => inHuong("nha")], ["ruong", 12.6, 2.4, 2, 1.1, "Mở rương xem đồ", () => openPanel("tui")],
+       ["bep", 12.4, 6.3, 2.4, 1.6, "Vào bếp nấu ăn", () => openPanel("bep")], ["chong", 6.6, 5.4, 2.8, 1.4, "Ngồi chõng tre uống chè", () => inChe()]], ng:[]},
+  in_quan:{k:"quan", map:"lang", n:"Quán nước cô Thắm", w:12, h:8, floor:"dat", wall:"#9A7A4E", door:[5, 2],
+    f:[["quay", 7, 2.3, 4, 1, "Gọi đồ ở quầy", () => openPanel("quan")], ["ban", 1.6, 4.4, 2, 1.2, "Ngồi uống bát chè xanh · 3đ", () => inChe(true)], ["ban", 6.4, 5, 2, 1.2, "Ngồi uống bát chè xanh · 3đ", () => inChe(true)], ["chum", 0.8, 2.3, 1, 1, "Chum nước mưa", () => toast("Chum nước mưa mát lạnh, cô Thắm pha chè bằng nước này.")]],
+    ng:[["tham", 9, 4.6]]},
+  in_thuoc:{k:"thuoc", map:"tran", n:"Hiệu thuốc thầy lang Tuệ", w:12, h:8, floor:"go", wall:"#7A6248", door:[5, 2],
+    f:[["tuthuoc", 1, 2, 5, 0.8, "Xem tủ thuốc nam", () => openPanel("thuoc")], ["quay", 7, 3, 4, 1, "Bốc thuốc ở quầy", () => openPanel("thuoc")], ["phan", 1, 4.6, 2.6, 1.6, "Phản khám bệnh", () => openPanel("thuoc")], ["nong", 8.6, 5.6, 2, 1, "Nong phơi thuốc", () => toast("Nong tre phơi đầy cam thảo, ngải cứu, hà thủ ô.")]],
+    ng:[["tue", 9, 4.8], ["ngoc", 4.4, 3.6]]},
+  in_loren:{k:"loren", map:"tran", n:"Phường đúc phủ Thiên Đức", w:12, h:8, floor:"dat", wall:"#5A4A3E", door:[5, 2],
+    f:[["lo", 1, 2, 2.6, 1.4, "Lò rèn đỏ lửa", () => toast("Lửa lò rèn đỏ rực, hơi nóng phả vào mặt. Bác Thiết quai búa chan chát.")], ["de", 4.2, 3.6, 1.2, 0.8, "Nhờ bác Thiết rèn đồ", () => openPanel("loren")], ["gia", 9, 2, 2.4, 0.8, "Xem giá binh khí", () => openPanel("loren")], ["quay", 7.4, 5, 3.6, 1, "Quầy kim hoàn ông Kim", () => openPanel("loren")]],
+    ng:[["thiet", 4.8, 5]]},
+  in_phu:{k:"phu", map:"tran", n:"Công đường phủ Thiên Đức", w:18, h:12, floor:"gach", wall:"#8A3A2A", door:[8, 2], cot:[3, 7, 11, 15],
+    f:[["an", 7, 2.1, 4, 1.4, "Trình việc lên quan huyện", () => openPanel("phu")], ["co", 4.4, 2.2, 1, 1, "", null], ["co", 12.6, 2.2, 1, 1, "", null], ["trong", 14.4, 8.2, 1.4, 1.4, "Đánh trống kêu oan", () => inTrong()]],
+    ng:[["quan", 9, 4.4]]},
+  in_dinh:{k:"dinh", map:"lang", n:"Trong đình làng Dâu", w:16, h:10, floor:"gach", wall:"#7A3E26", door:[7, 2], cot:[3, 6, 10, 13],
+    f:[["huongan", 6.5, 2.1, 3, 1.2, "Thắp hương thành hoàng làng", () => inHuong("dinh")], ["bang", 1, 2.1, 2.6, 0.6, "Xem bảng tin, lớp học", () => openPanel("dinh")], ["chieu", 4, 5.6, 8, 1.6, "Ngồi vào lớp học", () => openPanel("dinh")]],
+    ng:[["chu", 8, 4.6]]},
+  in_tro:{k:"tro", map:"tran", n:"Quán trọ phủ Thiên Đức", w:12, h:8, floor:"go", wall:"#8A6A44", door:[5, 2],
+    f:[["quay", 1, 2.3, 4, 1, "Gọi cơm, thuê phòng", () => openPanel("tro")], ["giuong", 8, 2.4, 3, 2, "Thuê giường ngủ trọ", () => openPanel("tro")], ["ban", 2, 5, 2, 1.2, "Bàn ăn của khách", () => openPanel("tro")]],
+    ng:[]}
+};
+const INK = {}; for (const m in INSIDE) INK[INSIDE[m].k] = m;
+const isIn = () => !!(S && S.map && S.map.startsWith("in_"));
+const outAt = I => { const d = MAPS[I.map].places[I.k].door; return [d[0] + d[2]/2, d[1] + d[3] + 0.55]; };
+function inWorld(){ const I = INSIDE[S.map], o = outAt(I); return [WMAP[I.map][0] + o[0], WMAP[I.map][1] + o[1]]; }
+for (const m in INSIDE){
+  const I = INSIDE[m];
+  MAPS[m] = {n:I.n, sub:"Bước ra cửa dưới để ra ngoài", w:I.w, h:I.h, places:{}, labels:[], trees:[], cau:[],
+    get exits(){ return [{r:[I.door[0], I.h - 1, I.door[1], 1], to:I.map, at:outAt(I), dir:2}]; },
+    build(){
+      fillT(0, 0, MW, MH, 4); block(0, 0, MW, 2); block(0, 0, 1, MH); block(MW - 1, 0, 1, MH); block(0, MH - 1, MW, 1); block(I.door[0], MH - 1, I.door[1], 1, 0);
+      for (const f of I.f){ if (f[0] === "chieu") continue; const x0 = Math.floor(f[1]), y0 = Math.floor(f[2]); block(x0, y0, Math.max(1, Math.ceil(f[1] + f[3] - 0.05) - x0), Math.max(1, Math.ceil(f[2] + f[4] - 0.05) - y0)); }
+      (I.cot || []).forEach(x => { block(x, 2, 1, 1); block(x, MH - 3, 1, 1); });
+    }};
+}
+/* Người trong nhà: dời người làng vào khi anh bước vào, trả ra chỗ cũ khi anh ra */
+let MOVED = [];
+function inRestore(){ for (const n of MOVED){ Object.assign(n, n.__out); n.x = n.hx*T; n.y = n.hy*T; n.tx = n.x; n.ty = n.y; delete n.__out; } MOVED = []; }
+function inPeople(m){
+  const I = INSIDE[m], L = I.ng.slice();
+  if (m === "in_nha"){ if (S.spouse) L.push([S.spouse, 10.4, 6.4]); const C = S.ct; if (C && C.quang && C.ch >= 1 && !C.sick) L.push(["quang", 4.2, 6.8]); }
+  for (const [id, x, y] of L){
+    const n = NPCS.find(q => q.id === id); if (!n || n.patrol || n.__out) continue;
+    if (m !== "in_nha" && (id === S.spouse || n.map !== I.map)) continue;
+    if (m === "in_nha" && id === "quang" && n.hide) continue;
+    n.__out = {map:n.map, hx:n.hx, hy:n.hy, r:n.r};
+    Object.assign(n, {map:m, hx:x, hy:y, r:0.5, x:x*T, y:y*T, tx:x*T, ty:y*T});
+    MOVED.push(n);
+  }
+}
+function inSleep(){
+  openModal(`<h2>Đi ngủ?</h2><p>Bây giờ là ${clockText()}, hôm nay còn ${S.suc}/${MAXS} sức.</p><p class="note">Đêm nay cây được tưới sẽ lớn thêm, gia súc ăn rơm cỏ trong kho. Sáng mai anh thức dậy lúc 6 giờ.</p>
+   <div class="acts"><button class="btn" data-act="close">Chưa, làm tiếp</button><button class="btn p" data-act="sleep">Đi ngủ</button></div>`);
+}
+function inHuong(k){
+  const X = x18(); X.hg = X.hg || {};
+  if (X.hg[k] === S.day){ toast("Hôm nay anh đã thắp hương rồi."); return; }
+  X.hg[k] = S.day; S.suc = Math.min(MAXS, S.suc + 1); S.time = Math.min(1430, S.time + 10); RLA.sfx("thang");
+  toast(k === "nha" ? "Anh thắp ba nén hương lên bàn thờ tổ tiên, khấn cho mùa màng tươi tốt. Lòng thanh thản, thêm 1 sức." : "Anh thắp hương thành hoàng làng, cầu cho làng Dâu bình yên. Thêm 1 sức.");
+  commit();
+}
+function inChe(paid){
+  if (paid){
+    if (S.che === S.day){ toast("Hôm nay anh đã uống chè ở quán rồi."); return; }
+    if (S.money < 3){ toast("Không đủ tiền.", "warn"); return; }
+    S.money -= 3; S.che = S.day; S.suc = Math.min(MAXS, S.suc + 3); S.time = Math.min(1430, S.time + 20); RLA.sfx("mua"); playAnim("an"); toast("Bát chè xanh nóng, hồi 3 sức."); commit(); return;
+  }
+  const X = x18(); if (X.chong === S.day){ toast("Hôm nay anh đã ngồi nghỉ rồi."); return; }
+  X.chong = S.day; S.suc = Math.min(MAXS, S.suc + 1); S.time = Math.min(1430, S.time + 20);
+  if (S.spouse){ const n = NPCS.find(q => q.id === S.spouse); addRel(S.spouse, 3, n ? n.n : ""); toast("Hai vợ chồng ngồi chõng tre uống chè, kể chuyện đồng áng. Thêm 1 sức, vợ thêm quý anh."); }
+  else toast("Anh ngồi chõng tre nhấp ngụm chè, nghe gió thổi qua rặng tre. Thêm 1 sức.");
+  RLA.sfx("tap"); commit();
+}
+function inTrong(){
+  const C = S.ct || {};
+  if (C.ch >= 4) toast("Tiếng trống kêu oan vang khắp phủ...");
+  else scene([K_("Anh cầm dùi định đánh trống kêu oan, nhưng nghĩ lại: chưa đủ bằng chứng, đánh trống mà không có chứng cứ thì bị phạt đòn."), K_("Gom đủ giấy tờ, nhân chứng rồi hãy quay lại.")]);
+}
+/* Bếp: nấu món ăn hồi sức */
+const BEP = [
+  ["com", "Cơm trắng", {thoc:1}, 4], ["khoai", "Khoai lang luộc", {khoai:1}, 5], ["canh", "Canh rau muống nấu trứng", {rau:1, trung:1}, 8],
+  ["cakho", "Cá kho tương", {ca:1}, 7], ["xoi", "Xôi lạc", {thoc:1, lac:1}, 7], ["chemia", "Chè mía", {mia:1}, 4]
+];
+function cook(i){
+  const B = BEP[i]; if (!B || !hasAll(B[2]) || S.suc >= MAXS) return;
+  for (const g in B[2]) S.goods[g] -= B[2][g];
+  S.suc = Math.min(MAXS, S.suc + B[3]); S.time = Math.min(1430, S.time + 30); stat("nau");
+  RLA.sfx("mua"); closeModal(); playAnim("an"); toast("Nấu xong " + B[1].toLowerCase() + ", ăn nóng hồi " + B[3] + " sức."); commit();
+}
+function vBep(){
+  return `<h2>Bếp nhà mình</h2><p class="sub">Kiềng ba chân, nồi đất, củi rơm. Nấu mất nửa canh giờ, ăn ngay hồi sức (đang ${S.suc}/${MAXS}).</p>
+   <div class="sec rows">${BEP.map((B, i) => `<div class="row"><span class="e">🍲</span><span class="t"><b>${B[1]} · +${B[3]} sức</b><small>Cần ${needTxt(B[2])}.</small></span><span class="a"><button class="btn s p" data-act="x18" data-k="cook" data-g="${i}" ${hasAll(B[2]) && S.suc < MAXS ? "" : "disabled"}>Nấu</button></span></div>`).join("")}</div>`;
+}
+PANELS.bep = vBep;
+/* Vẽ trong nhà */
+function boxF(x, y, w, h, ht, top, front){ cx.fillStyle = front; cx.fillRect(x, y + h - ht, w, ht); cx.fillStyle = top; cx.fillRect(x, y - ht, w, h); }
+function drawRoom(I, t){
+  const W0 = I.w*T, H0 = I.h*T;
+  if (I.floor === "gach"){ cx.fillStyle = "#B8653F"; cx.fillRect(0, 0, W0, H0); cx.strokeStyle = "rgba(90,40,20,.35)"; cx.lineWidth = 1; for (let x = 0; x <= I.w; x++){ cx.beginPath(); cx.moveTo(x*T, 0); cx.lineTo(x*T, H0); cx.stroke(); } for (let y = 0; y <= I.h; y++){ cx.beginPath(); cx.moveTo(0, y*T); cx.lineTo(W0, y*T); cx.stroke(); } }
+  else if (I.floor === "go"){ cx.fillStyle = "#A87A4A"; cx.fillRect(0, 0, W0, H0); cx.fillStyle = "rgba(70,40,20,.25)"; for (let y = 0; y < I.h*2; y++){ cx.fillRect(0, y*T/2, W0, 1); for (let x = (y % 2)*1.5; x < I.w; x += 3) cx.fillRect(x*T, y*T/2, 1, T/2); } }
+  else { cx.fillStyle = "#B4936A"; cx.fillRect(0, 0, W0, H0); const R = rng(I.w*31 + I.h); cx.fillStyle = "rgba(90,64,38,.22)"; for (let k = 0; k < I.w*I.h*2; k++) cx.fillRect(R()*W0, R()*H0, 2, 2); }
+  /* tường sau có cửa sổ song gỗ */
+  cx.fillStyle = I.wall; cx.fillRect(0, 0, W0, 2*T); cx.fillStyle = shade(I.wall, 0.75); cx.fillRect(0, 2*T - 6, W0, 6);
+  cx.fillStyle = shade(I.wall, 0.6); cx.fillRect(0, 0, W0, 8);
+  for (let x = 2; x < I.w - 2; x += 5){ cx.fillStyle = "#F2E2B6"; cx.fillRect(x*T, 0.55*T, 1.6*T, 0.9*T); cx.fillStyle = shade(I.wall, 0.55); for (let k = 0; k <= 4; k++) cx.fillRect(x*T + k*1.6*T/4 - 1.5, 0.55*T, 3, 0.9*T); cx.fillRect(x*T, 0.55*T, 1.6*T, 3); cx.fillRect(x*T, 1.45*T - 3, 1.6*T, 3); }
+  cx.fillStyle = shade(I.wall, 0.7); cx.fillRect(0, 0, 0.35*T, H0); cx.fillRect(W0 - 0.35*T, 0, 0.35*T, H0);
+  /* tường trước, chừa cửa */
+  cx.fillStyle = shade(I.wall, 0.65); cx.fillRect(0, H0 - 0.55*T, I.door[0]*T, 0.55*T); cx.fillRect((I.door[0] + I.door[1])*T, H0 - 0.55*T, W0 - (I.door[0] + I.door[1])*T, 0.55*T);
+  const g = cx.createLinearGradient(0, H0 - T, 0, H0); g.addColorStop(0, "rgba(255,236,170,0)"); g.addColorStop(1, `rgba(255,236,170,${0.45 + 0.1*Math.sin(t*2)})`); cx.fillStyle = g; cx.fillRect(I.door[0]*T, H0 - T, I.door[1]*T, T);
+  /* đèn lồng */
+  for (let x = 3; x < I.w - 2; x += 5){ cx.strokeStyle = "#3A2A1A"; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(x*T + 26, 0); cx.lineTo(x*T + 26, 14); cx.stroke(); cx.fillStyle = "#C2402A"; cx.beginPath(); cx.ellipse(x*T + 26, 22, 7, 9, 0, 0, 7); cx.fill(); cx.fillStyle = `rgba(255,214,120,${0.5 + 0.15*Math.sin(t*3 + x)})`; cx.beginPath(); cx.ellipse(x*T + 26, 22, 3.5, 6, 0, 0, 7); cx.fill(); }
+}
+function drawCot(x, y){ cx.fillStyle = "rgba(0,0,0,.18)"; cx.beginPath(); cx.ellipse(x + 16, y + 30, 13, 4, 0, 0, 7); cx.fill(); cx.fillStyle = "#7A2E1E"; cx.fillRect(x + 8, y - 54, 16, 84); cx.fillStyle = "#9A3E2A"; cx.fillRect(x + 10, y - 54, 5, 84); cx.fillStyle = "#3A2A1A"; cx.fillRect(x + 4, y + 24, 24, 7); }
+function drawFurn(f, t){
+  const [k, fx, fy, fw, fh] = f, x = fx*T, y = fy*T, w = fw*T, h = fh*T;
+  cx.fillStyle = "rgba(0,0,0,.15)"; cx.fillRect(x + 3, y + 4, w, h);
+  if (k === "giuong"){ boxF(x, y, w, h, 14, "#C9A86A", "#7A5A30"); cx.fillStyle = "#D9C8A0"; cx.fillRect(x + 4, y - 12, w - 8, h - 6); cx.fillStyle = "#A0443A"; cx.fillRect(x + 6, y - 10, 22, 14); cx.fillStyle = "#6A8AB0"; cx.fillRect(x + w*0.45, y - 12, w*0.5, h - 6); }
+  else if (k === "bantho"){ boxF(x, y, w, h, 30, "#7A2E1E", "#5A1E12"); cx.fillStyle = "#E3B53C"; cx.fillRect(x + 4, y - 30, w - 8, 3); cx.fillStyle = "#B88A3A"; cx.beginPath(); cx.ellipse(x + w/2, y - 30, 9, 4, 0, 0, 7); cx.fill(); cx.fillStyle = "#E8E2D0"; cx.fillRect(x + 10, y - 44, 3, 14); cx.fillRect(x + w - 13, y - 44, 3, 14); cx.fillStyle = "#F2C94C"; cx.fillRect(x + 10.5, y - 48, 2, 4); cx.fillRect(x + w - 12.5, y - 48, 2, 4);
+    cx.fillStyle = "#3A2A1A"; cx.fillRect(x + w/2 - 10, y - 58, 20, 22); cx.fillStyle = "#C9B48A"; cx.fillRect(x + w/2 - 7, y - 55, 14, 16);
+    for (let k2 = 0; k2 < 3; k2++){ const q = (t*0.4 + k2/3) % 1; cx.fillStyle = `rgba(220,220,225,${0.5*(1 - q)})`; cx.beginPath(); cx.arc(x + w/2 + Math.sin(q*6 + k2)*4, y - 36 - q*40, 2 + q*4, 0, 7); cx.fill(); } }
+  else if (k === "ruong"){ boxF(x, y, w, h, 22, "#8A5A2E", "#6A4020"); cx.fillStyle = "#E3B53C"; cx.fillRect(x + w/2 - 5, y + h - 18, 10, 8); cx.fillRect(x, y - 22 + h/2, w, 2); }
+  else if (k === "bep"){ cx.fillStyle = "#5A4A3A"; cx.fillRect(x, y, w, h); for (const [ox, oy] of [[0.3, 0.3], [0.7, 0.3], [0.5, 0.75]]){ cx.fillStyle = "#7A7068"; cx.beginPath(); cx.arc(x + w*ox, y + h*oy, 6, 0, 7); cx.fill(); }
+    for (let k2 = 0; k2 < 4; k2++){ cx.fillStyle = k2 % 2 ? "#F2A23A" : "#E2552A"; cx.beginPath(); cx.moveTo(x + w*0.35 + k2*7, y + h*0.6); cx.lineTo(x + w*0.38 + k2*7, y + h*0.6 - 10 - Math.sin(t*12 + k2)*4); cx.lineTo(x + w*0.41 + k2*7, y + h*0.6); cx.fill(); }
+    cx.fillStyle = "#3A2E26"; cx.beginPath(); cx.ellipse(x + w/2, y + h*0.35, 16, 12, 0, 0, 7); cx.fill(); cx.fillStyle = "#5A4A3E"; cx.beginPath(); cx.ellipse(x + w/2, y + h*0.25, 14, 4, 0, 0, 7); cx.fill();
+    const q = (t*0.5) % 1; cx.fillStyle = `rgba(235,235,240,${0.45*(1 - q)})`; cx.beginPath(); cx.arc(x + w/2, y - q*36, 4 + q*6, 0, 7); cx.fill(); }
+  else if (k === "chong"){ boxF(x, y, w, h, 12, "#C9A86A", "#8A6A3A"); cx.fillStyle = "rgba(90,64,30,.4)"; for (let k2 = 1; k2 < 7; k2++) cx.fillRect(x + k2*w/7, y - 12, 1, h); cx.fillStyle = "#6A7A6A"; cx.beginPath(); cx.ellipse(x + w/2, y - 18, 8, 7, 0, 0, 7); cx.fill(); cx.fillStyle = "#E8E2D0"; cx.fillRect(x + w/2 + 14, y - 16, 6, 5); cx.fillRect(x + w/2 - 20, y - 16, 6, 5); }
+  else if (k === "quay"){ boxF(x, y, w, h, 26, "#9A7240", "#6E4823"); cx.fillStyle = "#4A3A2A"; cx.fillRect(x, y - 26, w, 3); for (let k2 = 0; k2 < Math.floor(w/22); k2++){ cx.fillStyle = ["#8A5A3A", "#6A7A5A", "#B88A4A"][k2 % 3]; cx.beginPath(); cx.ellipse(x + 14 + k2*22, y - 32, 7, 9, 0, 0, 7); cx.fill(); } }
+  else if (k === "ban"){ boxF(x + 8, y, w - 16, h - 6, 16, "#9A7240", "#6E4823"); cx.fillStyle = "#6A7A6A"; cx.beginPath(); cx.ellipse(x + w/2, y - 20, 6, 5, 0, 0, 7); cx.fill(); cx.fillStyle = "#7A5A30"; cx.fillRect(x, y + 6, 8, 18); cx.fillRect(x + w - 8, y + 6, 8, 18); }
+  else if (k === "chum"){ cx.fillStyle = "#6A4A30"; cx.beginPath(); cx.ellipse(x + w/2, y + h/2 - 6, 15, 18, 0, 0, 7); cx.fill(); cx.fillStyle = "#3A5A7A"; cx.beginPath(); cx.ellipse(x + w/2, y - 8, 10, 4, 0, 0, 7); cx.fill(); }
+  else if (k === "tuthuoc"){ boxF(x, y, w, h, 56, "#7A5230", "#5E3E22"); for (let r = 0; r < 4; r++) for (let c = 0; c < Math.floor(w/20); c++){ cx.fillStyle = "#8A6038"; cx.fillRect(x + 4 + c*20, y + h - 54 + r*13, 16, 10); cx.fillStyle = "#E3B53C"; cx.fillRect(x + 11 + c*20, y + h - 50 + r*13, 3, 3); } }
+  else if (k === "phan"){ boxF(x, y, w, h, 12, "#B08A50", "#7A5A30"); cx.fillStyle = "#D8CBA8"; cx.fillRect(x + 6, y - 10, w - 12, h - 8); }
+  else if (k === "nong"){ cx.fillStyle = "#C9A86A"; cx.beginPath(); cx.ellipse(x + w/2, y + h/2, w/2, h/2 + 4, 0, 0, 7); cx.fill(); cx.fillStyle = "#6E8A3A"; for (let k2 = 0; k2 < 14; k2++) cx.fillRect(x + 10 + (k2*13) % (w - 20), y + 6 + (k2*7) % (h - 6), 5, 3); }
+  else if (k === "lo"){ boxF(x, y, w, h, 40, "#6A5A50", "#4A3E36"); const gl = 0.7 + 0.3*Math.sin(t*9); cx.fillStyle = `rgba(255,${120 + 60*gl},40,1)`; cx.fillRect(x + w/2 - 16, y + h - 28, 32, 18); cx.fillStyle = `rgba(255,190,90,${0.25*gl})`; cx.beginPath(); cx.arc(x + w/2, y + h - 18, 46, 0, 7); cx.fill();
+    cx.fillStyle = "#3A322C"; cx.fillRect(x + w/2 - 10, y - 90, 20, 50); for (let k2 = 0; k2 < 4; k2++){ const q = (t*0.4 + k2/4) % 1; cx.fillStyle = `rgba(80,76,72,${0.5*(1 - q)})`; cx.beginPath(); cx.arc(x + w/2 + Math.sin(q*5 + k2)*5, y - 92 - q*40, 6 + q*8, 0, 7); cx.fill(); } }
+  else if (k === "de"){ cx.fillStyle = "#4A4440"; cx.fillRect(x + 6, y + 4, w - 12, h - 2); cx.fillStyle = "#6A6460"; cx.fillRect(x - 2, y - 10, w + 4, 12); cx.fillStyle = "#8A8480"; cx.fillRect(x - 2, y - 10, w + 4, 3); }
+  else if (k === "gia"){ cx.fillStyle = "#6E4823"; cx.fillRect(x, y - 30, 5, 50); cx.fillRect(x + w - 5, y - 30, 5, 50); cx.fillRect(x, y - 24, w, 4); cx.fillRect(x, y + 4, w, 4);
+    for (let k2 = 0; k2 < 4; k2++){ const sx = x + 14 + k2*16; cx.fillStyle = k2 % 2 ? "#8A6A3A" : "#4A3A2A"; cx.fillRect(sx, y - 46, 3, 58); cx.fillStyle = "#D9DDE2"; if (k2 % 2){ cx.beginPath(); cx.moveTo(sx + 1.5, y - 58); cx.lineTo(sx - 3, y - 44); cx.lineTo(sx + 6, y - 44); cx.fill(); } else cx.fillRect(sx - 1, y - 52, 5, 22); } }
+  else if (k === "an"){ cx.fillStyle = "#6A2A1A"; cx.fillRect(x - 16, y + h - 10, w + 32, 14); boxF(x, y, w, h - 8, 24, "#8A3A22", "#5E1E12"); cx.fillStyle = "#E3B53C"; cx.fillRect(x, y - 24, w, 3); cx.fillStyle = "#E8E2D0"; cx.fillRect(x + w*0.6, y - 34, 18, 12); cx.fillStyle = "#B23A28"; cx.fillRect(x + w*0.25, y - 32, 10, 10); cx.fillStyle = "#3A2A1A"; cx.fillRect(x + w*0.25 + 3, y - 40, 3, 10); }
+  else if (k === "co"){ cx.fillStyle = "#3A2A1A"; cx.fillRect(x + w/2 - 2, y - 60, 4, 76); cx.fillStyle = "#C2402A"; cx.beginPath(); cx.moveTo(x + w/2 + 2, y - 60); cx.lineTo(x + w/2 + 30 + Math.sin(t*2)*3, y - 50); cx.lineTo(x + w/2 + 2, y - 36); cx.fill(); cx.fillStyle = "#F2C94C"; cx.font = "700 10px serif"; cx.textAlign = "center"; cx.fillText("令", x + w/2 + 13, y - 45); }
+  else if (k === "trong"){ cx.fillStyle = "#5A3A20"; cx.fillRect(x + 4, y - 4, 5, h + 4); cx.fillRect(x + w - 9, y - 4, 5, h + 4); cx.fillStyle = "#9A3A22"; cx.beginPath(); cx.ellipse(x + w/2, y + 2, w/2 - 2, 20, 0, 0, 7); cx.fill(); cx.fillStyle = "#E8D9B0"; cx.beginPath(); cx.ellipse(x + w/2, y + 2, w/2 - 8, 16, 0, 0, 7); cx.fill(); cx.fillStyle = "#3A2A1A"; cx.fillRect(x + w - 2, y - 12, 14, 3); }
+  else if (k === "huongan"){ boxF(x, y, w, h, 34, "#8A3A22", "#5E1E12"); cx.fillStyle = "#E3B53C"; cx.fillRect(x + 4, y - 34, w - 8, 3); cx.fillStyle = "#B88A3A"; cx.beginPath(); cx.ellipse(x + w/2, y - 36, 12, 6, 0, 0, 7); cx.fill(); for (let k2 = 0; k2 < 3; k2++){ const q = (t*0.4 + k2/3) % 1; cx.fillStyle = `rgba(220,220,225,${0.5*(1 - q)})`; cx.beginPath(); cx.arc(x + w/2 + Math.sin(q*6 + k2)*4, y - 42 - q*40, 2 + q*4, 0, 7); cx.fill(); } }
+  else if (k === "bang"){ cx.fillStyle = "#6E4823"; cx.fillRect(x, y - 50, w, 44); cx.fillStyle = "#EFE4C8"; cx.fillRect(x + 4, y - 46, w - 8, 36); cx.fillStyle = "#3A2A1A"; for (let k2 = 0; k2 < 4; k2++) cx.fillRect(x + 10, y - 40 + k2*8, w - 20 - (k2 % 2)*14, 2); }
+  else if (k === "chieu"){ cx.fillStyle = "#C9A86A"; cx.fillRect(x, y, w, h); cx.fillStyle = "#A07F33"; for (let k2 = 0; k2 < 8; k2++) cx.fillRect(x, y + 3 + k2*6, w, 1); cx.fillStyle = "#B23A28"; cx.fillRect(x, y, w, 3); cx.fillRect(x, y + h - 3, w, 3); }
+}
+{
+  const lm0 = loadMap;
+  loadMap = function(id){
+    lm0(id);
+    if (!S || id !== S.map) return;
+    inRestore(); if (INSIDE[id]) inPeople(id);
+  };
+  const ep0 = enterPlace;
+  enterPlace = function(k){
+    const m = INK[k];
+    if (!m || (k !== "nha" && !isOpen(k))) return ep0(k);
+    if (RIDE) dismount();
+    const I = INSIDE[m]; RLA.sfx("tap"); switchMap(m, [I.door[0] + I.door[1]/2, I.h - 1.7]);
+  };
+  const gp0 = goPlace;
+  goPlace = function(k){
+    if (isIn()){ const I = INSIDE[S.map]; if (k === I.k){ return; } pendingGo = k; switchMap(I.map, outAt(I)); return; }
+    return gp0(k);
+  };
+  const dx0 = drawExtra11;
+  drawExtra11 = function(sp, t){
+    dx0(sp, t);
+    const I = INSIDE[S.map]; if (!I) return;
+    sp.push([-2e9, () => drawRoom(I, t)]);
+    for (const f of I.f) sp.push([(f[2] + f[4])*T - (f[0] === "chieu" ? 1e6 : 0), () => drawFurn(f, t)]);
+    (I.cot || []).forEach(x => { sp.push([3*T - 2, () => drawCot(x*T, 2*T + 2)]); sp.push([(I.h - 2)*T - 2, () => drawCot(x*T, (I.h - 3)*T + 2)]); });
+  };
+  const di0 = digItems;
+  digItems = function(L){
+    di0(L);
+    const I = INSIDE[S.map]; if (!I) return;
+    I.f.forEach((f, i) => { if (f[6]) L.push({id:"in_f" + i, r:[f[1]*T, f[2]*T - 10, f[3]*T, f[4]*T + 10], lab:f[5], go:f[6]}); });
+    L.push({id:"in_ra", r:[I.door[0]*T, (I.h - 1.4)*T, I.door[1]*T, 1.4*T], lab:"Ra ngoài", go:() => switchMap(I.map, outAt(I))});
+  };
+}
+function x18Act(k, d){ if (k === "cook") cook(+d.g); }
+function showNew18(){
+  S.seen18 = true; save();
+  openModal(`<h2>Bản 18 có gì mới</h2><ul class="notes">
+   <li class="good">Vào được bên trong nhà cửa: nhà mình, quán nước cô Thắm, đình làng, hiệu thuốc, phường đúc, công đường, quán trọ. Đến cửa bấm Làm là bước vào, đi ra cửa dưới là ra ngoài.</li>
+   <li class="good">Trong nhà mình: giường để ngủ, bàn thờ tổ tiên thắp hương (thêm sức), rương đồ, bếp nấu cơm, canh, cá kho, xôi lạc (ăn ngay hồi sức), chõng tre uống chè với vợ.</li>
+   <li class="good">Trong quán, hiệu thuốc, lò rèn: chủ quán đứng sau quầy, tới quầy bấm Làm để mua bán như trước. Lò rèn đỏ lửa, công đường có trống kêu oan (dùng ở chương sau).</li></ul>
+   <div class="acts"><button class="btn p" data-act="close">Ra đồng</button></div>`);
+}
+
 /* Ván cũ từ bản 5 trở về trước: chuyển sang bản đồ ba vùng, thêm giờ giấc và tình cảm */
 function migrate(){
   if (S.map === "hang"){ S.map = "nui"; S.pos = [20*T, 8.7*T]; S.cave = null; }
+  if (S.map && S.map.startsWith("in_")){ const I = INSIDE[S.map]; if (I){ const o = outAt(I); S.map = I.map; S.pos = [o[0]*T, o[1]*T]; } else { S.map = "nha"; S.pos = null; } }
   if (!MAPS[S.map]){ S.map = "nha"; S.pos = null; }
   MAXS = 20 + (S.maxs || 0);
   if (typeof S.time !== "number") S.time = 360;
@@ -5339,11 +6389,11 @@ function start(data){
   ensureQuests();
   joyRest();
   render();
-  if (!S.seenHelp7){ S.seen9 = S.seen10 = S.seen11 = S.seen12 = S.seen13 = S.seen14 = true; showHelp(); } else if (!S.seen9) showNew9(); else if (!S.seen10) showNew10(); else if (!S.seen11) showNew11(); else if (!S.seen12) showNew12(); else if (!S.seen13) showNew13(); else if (!S.seen14) showNew14(); else showBanner(MAPS[S.map]);
+  if (!S.seenHelp7){ S.seen9 = S.seen10 = S.seen11 = S.seen12 = S.seen13 = S.seen14 = S.seen15 = S.seen16 = S.seen17 = S.seen18 = true; showHelp(); } else if (!S.seen9) showNew9(); else if (!S.seen10) showNew10(); else if (!S.seen11) showNew11(); else if (!S.seen12) showNew12(); else if (!S.seen13) showNew13(); else if (!S.seen14) showNew14(); else if (!S.seen15) showNew15(); else if (!S.seen16) showNew16(); else if (!S.seen17) showNew17(); else if (!S.seen18) showNew18(); else showBanner(MAPS[S.map]);
   requestAnimationFrame(frame);
 }
 /* Chỉ dùng khi chạy thử máy: thêm ?thu=1 vào đường dẫn */
-if (/[?&]thu=1/.test(location.search)) window.__rl = {get S(){ return S; }, get FISH(){ return FISH; }, P, NPCS, CAT, goPlace, switchMap, openPanel, sleep, hit:i => hitRock(i), goFloor, t11:{tapPlot, digSpot, gop, ren, maiNgoc, lamDo, talkTo, interacts, giveGift, cauHon, nightRen}, t12:{get talkTo(){ return talkTo; }, get fishAct(){ return fishAct; }, givePiece, digKho, openFoxBox, FOX, updFox, kmHtml}, t13:{hocStart, hocAns, thiStart, thiAns, gopDh, renGiao, get LES(){ return LES; }, get EXAM(){ return EXAM; }, QB, taxDue}, t14:{get FOES(){ return FOES; }, get HPF(){ return HPF; }, set HPF(v){ HPF = v; }, get KHI(){ return KHI; }, set KHI(v){ KHI = v; }, spawnFoe, ctAtk, ctFin, ctRoll, blkOn, blkOff, npcBeat, ctMarks, ctTasks, stormScene, scNext, scPick, get SC(){ return SC; }, playAnim, ctAct, get talkTo(){ return talkTo; }, get giveGift(){ return giveGift; }, get openFoxBox(){ return openFoxBox; }, foxNight, wreckPos, migrate:() => migrate()}};
+if (/[?&]thu=1/.test(location.search)) window.__rl = {get S(){ return S; }, get FISH(){ return FISH; }, P, NPCS, CAT, goPlace, switchMap, openPanel, sleep, hit:i => hitRock(i), goFloor, t11:{tapPlot, digSpot, gop, ren, maiNgoc, lamDo, talkTo, interacts, giveGift, cauHon, nightRen}, t12:{get talkTo(){ return talkTo; }, get fishAct(){ return fishAct; }, givePiece, digKho, openFoxBox, FOX, updFox, kmHtml}, t13:{hocStart, hocAns, thiStart, thiAns, gopDh, renGiao, get LES(){ return LES; }, get EXAM(){ return EXAM; }, QB, taxDue}, t14:{get FOES(){ return FOES; }, get HPF(){ return HPF; }, set HPF(v){ HPF = v; }, get KHI(){ return KHI; }, set KHI(v){ KHI = v; }, spawnFoe, ctAtk, ctFin, ctRoll, blkOn, blkOff, npcBeat, ctMarks, ctTasks, stormScene, scNext, scPick, get SC(){ return SC; }, playAnim, ctAct, get talkTo(){ return talkTo; }, get giveGift(){ return giveGift; }, get openFoxBox(){ return openFoxBox; }, foxNight, wreckPos, migrate:() => migrate()}, t15:{get solid(){ return solid; }, x15, fcGet, fcText, forgeAct, queAct, xemAct, voAct, vunAct, x15Act, voLv, armorPct, get wpn(){ return wpn; }, get hitPlayer(){ return hitPlayer; }, get faintFight(){ return faintFight; }, get npcBeat(){ return npcBeat; }, get ctTasks(){ return ctTasks; }, get rollEvent(){ return rollEvent; }, coScene, leScene}, t16:{x16, genReq, lend, refuse, nightLoans, dunLoan, huiJoin, huiBid, huiNight, huiPay, ctOpenAct, ctPut, ctTake, ctLv, ctClose, ctTick, get KHACH(){ return KHACH; }}, t17:{x17, get WILD(){ return WILD; }, get RIDE(){ return RIDE; }, rideToggle, rideMul, lassoStart, lzHit, get LZ(){ return LZ; }, spawnWild, curH}, t18:{INSIDE, cook, inHuong, inChe, get MOVED(){ return MOVED; }, get enterPlace(){ return enterPlace; }, get goPlace(){ return goPlace; }}};
 try { window.claude?.hot?.snapshot?.(() => ({S})); } catch(e){}
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
 })();
